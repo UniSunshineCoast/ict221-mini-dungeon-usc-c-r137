@@ -5,20 +5,34 @@ public class Player {
     private int playerLocationX;
     private int playerLocationY;
     private int playerTreasures;
+    private final int playerSize;
     // Player constructor to initialize objects default data structures
-    public Player() {
-        playerSteps = 0;
+    public Player(int x) {
         playerLocationX = 0;
         playerLocationY = 0;
+        playerSize = x - 1;
         playerTreasures = 0;
+        playerSteps = 0;
     }
 
-    public void setPlayerLocationY(int y) {
-        this.playerLocationY = playerLocationY + y;
+    public boolean setPlayerLocationY(int y) {
+        if (playerLocationY + y < 0 || playerLocationY + y > this.playerSize) {
+            return false;
+        } else {
+            this.playerSteps++;
+            this.playerLocationY = playerLocationY + y;
+            return true;
+        }
     }
 
-    public void setPlayerLocationX(int x) {
-        this.playerLocationX = playerLocationX + x;
+    public boolean setPlayerLocationX(int x) {
+        if (playerLocationX + x < 0 || playerLocationX + x > this.playerSize) {
+            return false;
+        } else {
+            this.playerSteps++;
+            this.playerLocationX = playerLocationX + x;
+            return true;
+        }
     }
 
     public int getPlayerLocationY() {
@@ -27,5 +41,9 @@ public class Player {
 
     public int getPlayerLocationX() {
         return this.playerLocationX;
+    }
+
+    public int getPlayerSteps() {
+        return this.playerSteps;
     }
 }

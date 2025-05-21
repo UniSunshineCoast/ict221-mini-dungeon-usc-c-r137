@@ -23,7 +23,7 @@ public class GameEngine {
      */
     public GameEngine(int size) {
         map = new Cell[size][size];
-        player = new Player();
+        player = new Player(size);
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -39,19 +39,39 @@ public class GameEngine {
     }
 
     public static void playerMoveUp() {
-        player.setPlayerLocationY(1);
+        if (player.setPlayerLocationY(1)) {
+            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+            System.out.printf("Total steps %d\n", player.getPlayerSteps());
+        } else {
+            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+        }
     }
 
     public static void playerMoveDown() {
-        player.setPlayerLocationY(-1);
+        if (player.setPlayerLocationY(-1)) {
+            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+            System.out.printf("Total steps %d\n", player.getPlayerSteps());
+        } else {
+            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+        }
     }
 
     public static void playerMoveRight() {
-        player.setPlayerLocationX(1);
+        if (player.setPlayerLocationX(1)) {
+            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+            System.out.printf("Total steps %d\n", player.getPlayerSteps());
+        } else {
+            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+        }
     }
 
     public static void playerMoveLeft() {
-        player.setPlayerLocationX(-1);
+        if (player.setPlayerLocationX(-1)) {
+            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+            System.out.printf("Total steps %d\n", player.getPlayerSteps());
+        } else {
+            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+        }
     }
 
     /**
@@ -87,16 +107,12 @@ public class GameEngine {
             userInput = r.readLine();
             if (userInput.equalsIgnoreCase("left")) {
                 playerMoveLeft();
-                System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             } else if (userInput.equalsIgnoreCase("right")) {
                 playerMoveRight();
-                System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             } else if (userInput.equalsIgnoreCase("up")) {
                 playerMoveUp();
-                System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             } else if (userInput.equalsIgnoreCase("down")) {
                 playerMoveDown();
-                System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             } else if (userInput.equalsIgnoreCase("x")) {
                 break;
             }
