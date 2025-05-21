@@ -13,7 +13,7 @@ public class GameEngine {
      *
      * Note: depending on your game, you might want to change this from 'int' to String or something?
      */
-    private Cell[][] map;
+    private static Cell[][] map;
     private static Player player;
     private static GameState gameState;
 
@@ -117,6 +117,16 @@ public class GameEngine {
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
         while(true) {
+            for(int i = 0; i < map.length; i++) {
+                for(int j = 0; j < map[i].length; j++){
+                    if(i == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
+                        System.out.print("P  ");
+                    } else {
+                        System.out.print("#  ");
+                    }
+                }
+                System.out.print("\n");
+            }
             System.out.println("Enter your move");
             userInput = r.readLine();
             if (userInput.equalsIgnoreCase("left")) {
