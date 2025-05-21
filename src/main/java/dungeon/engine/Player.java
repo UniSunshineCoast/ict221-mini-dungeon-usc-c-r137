@@ -71,6 +71,6 @@ public class Player implements HealthInterface {
 
     @Override
     public boolean isDead() {
-        return getHealth() < 0;
+        return getHealth() <= 0;
     }
 }
