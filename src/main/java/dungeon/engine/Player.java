@@ -66,6 +66,7 @@ public class Player implements HealthInterface {
     @Override
     public void damageHealth(int x) {
         this.playerHealth = getHealth() - x;
+        isDead();
     }
 
     @Override
