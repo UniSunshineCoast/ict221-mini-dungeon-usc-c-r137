@@ -51,7 +51,7 @@ public class GameEngine {
         if (player.setPlayerLocationY(1)) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
-            gameState.setSteps();
+            gameState.setSteps(-1);
         } else {
             System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
         }
@@ -61,7 +61,7 @@ public class GameEngine {
         if (player.setPlayerLocationY(-1)) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
-            gameState.setSteps();
+            gameState.setSteps(-1);
         } else {
             System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
         }
@@ -71,7 +71,7 @@ public class GameEngine {
         if (player.setPlayerLocationX(1)) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
-            gameState.setSteps();
+            gameState.setSteps(-1);
         } else {
             System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
         }
@@ -81,7 +81,7 @@ public class GameEngine {
         if (player.setPlayerLocationX(-1)) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
-            gameState.setSteps();
+            gameState.setSteps(-1);
         } else {
             System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
         }

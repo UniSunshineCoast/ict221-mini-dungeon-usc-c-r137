@@ -16,8 +16,8 @@ public class GameState {
         return score;
     }
 
-    public void setSteps() {
-        steps--;
+    public void setSteps(int x) {
+        steps = steps + x;
     }
 
     public int getSteps() {
