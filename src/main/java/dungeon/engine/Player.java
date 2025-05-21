@@ -1,17 +1,19 @@
 package dungeon.engine;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Player {
     private int playerSteps;
     private int playerLocationX;
     private int playerLocationY;
-    private int playerTreasures;
+    private ArrayList<String> playerTreasures = new ArrayList<String>();
     private final int playerSize;
     // Player constructor to initialize objects default data structures
     public Player(int x) {
         playerLocationX = 0;
         playerLocationY = 0;
         playerSize = x - 1;
-        playerTreasures = 0;
         playerSteps = 0;
     }
 
