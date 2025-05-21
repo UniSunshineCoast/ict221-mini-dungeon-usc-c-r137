@@ -3,6 +3,6 @@ package dungeon.engine;
 public interface HealthInterface {
     int getHealth();
     int getMaxHealth();
-    int damageHealth();
+    void damageHealth(int x);
     boolean isDead();
 }
