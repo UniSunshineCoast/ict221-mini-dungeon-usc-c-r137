@@ -38,6 +38,14 @@ public class GameEngine {
         map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
     }
 
+    public static void playerLoot() {
+
+    }
+
+    public static void playerAttack() {
+
+    }
+
     public static void playerMoveUp() {
         if (player.setPlayerLocationY(1)) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
