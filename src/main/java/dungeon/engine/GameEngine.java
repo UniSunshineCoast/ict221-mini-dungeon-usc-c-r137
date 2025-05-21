@@ -117,9 +117,9 @@ public class GameEngine {
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
         while(true) {
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++){
-                    if(i == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
+            for(int i = map.length; i > 0; i--) {
+                for(int j = 0; j < map[i-1].length; j++){
+                    if(i-1 == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
                         System.out.print("P  ");
                     } else {
                         System.out.print("#  ");
