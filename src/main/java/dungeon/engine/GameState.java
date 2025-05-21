@@ -6,6 +6,7 @@ public class GameState {
 
     public GameState(int x) {
         steps = x;
+        score = 0;
     }
 
     public void setScore(int x) {

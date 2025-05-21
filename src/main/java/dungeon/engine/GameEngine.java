@@ -25,6 +25,7 @@ public class GameEngine {
     public GameEngine(int size) {
         map = new Cell[size][size];
         player = new Player(size);
+        gameState = new GameState(100);
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -39,7 +40,7 @@ public class GameEngine {
         map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
     }
 
-    public static void playerLoot() {
+    public static void playerCollect() {
 
     }
 
