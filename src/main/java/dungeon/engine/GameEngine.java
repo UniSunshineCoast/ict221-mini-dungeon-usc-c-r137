@@ -129,7 +129,7 @@ public class GameEngine {
                     if(i-1 == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
                         System.out.print("P  ");
                     } else if(mutantMelee[i -1][j] != null) {
-                            System.out.print("M  ");
+                        System.out.print("M  ");
                     } else if(i-1 == mutantRange.getEnemyLocationY() && j == mutantRange.getEnemyLocationX()) {
                         System.out.print("R  ");
                     } else {
