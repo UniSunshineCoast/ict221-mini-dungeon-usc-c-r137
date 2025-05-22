@@ -16,7 +16,7 @@ public class GameEngine {
     private static Cell[][] map;
     private static Player player;
     private static GameState gameState;
-    private static MutantMelee mutantMelee;
+    private static MutantMelee[][] mutantMelee;
     private static MutantRange mutantRange;
 
     /**
@@ -26,8 +26,10 @@ public class GameEngine {
      */
     public GameEngine(int size) {
         map = new Cell[size][size];
+        mutantMelee = new MutantMelee[size][size];
         player = new Player(size);
         gameState = new GameState(100);
+        mutantRange = new MutantRange(2,2);
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -35,6 +37,10 @@ public class GameEngine {
                 Text text = new Text(i + "," + j);
                 cell.getChildren().add(text);
                 map[i][j] = cell;
+                if (i % 4 == 0 && j % 4 == 0) {
+                    MutantMelee mutant = new MutantMelee(i , j);
+                    mutantMelee[i][j] = mutant;
+                }
             }
         }
 
@@ -53,7 +59,15 @@ public class GameEngine {
 
     }
 
-    public static void playerMoveText(boolean x) {
+    public  static void checkMeleeAttack() {
+        if(mutantMelee[player.getPlayerLocationX()][player.getPlayerLocationY()] != null) {
+            player.damageHealth(mutantMelee[player.getPlayerLocationX()][player.getPlayerLocationY()].getEnemyDamage());
+            mutantMelee[player.getPlayerLocationX()][player.getPlayerLocationY()] = null;
+        }
+    }
+
+    public static void playerMove(boolean x) {
+        checkMeleeAttack();
         if (x) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
@@ -65,19 +79,19 @@ public class GameEngine {
     }
 
     public static void playerMoveUp() {
-        playerMoveText(player.setPlayerLocationY(1));
+        playerMove(player.setPlayerLocationY(1));
     }
 
     public static void playerMoveDown() {
-        playerMoveText(player.setPlayerLocationY(-1));
+        playerMove(player.setPlayerLocationY(-1));
     }
 
     public static void playerMoveRight() {
-        playerMoveText(player.setPlayerLocationX(1));
+        playerMove(player.setPlayerLocationX(1));
     }
 
     public static void playerMoveLeft() {
-        playerMoveText(player.setPlayerLocationX(-1));
+        playerMove(player.setPlayerLocationX(-1));
     }
 
     /**
@@ -108,11 +122,16 @@ public class GameEngine {
         String userInput;
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
+        System.out.println(mutantMelee[8][8]);
         while(true) {
             for(int i = map.length; i > 0; i--) {
                 for(int j = 0; j < map[i-1].length; j++){
                     if(i-1 == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
                         System.out.print("P  ");
+                    } else if(mutantMelee[i -1][j] != null) {
+                            System.out.print("M  ");
+                    } else if(i-1 == mutantRange.getEnemyLocationY() && j == mutantRange.getEnemyLocationX()) {
+                        System.out.print("R  ");
                     } else {
                         System.out.print("#  ");
                     }
