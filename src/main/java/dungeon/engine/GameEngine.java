@@ -37,7 +37,7 @@ public class GameEngine {
                 Text text = new Text(i + "," + j);
                 cell.getChildren().add(text);
                 map[i][j] = cell;
-                if (i % 4 == 0 && j % 4 == 0) {
+                if (i % 4 == 0 && j % 8 == 0) {
                     MutantMelee mutant = new MutantMelee(i , j);
                     mutantMelee[i][j] = mutant;
                 }
@@ -60,9 +60,10 @@ public class GameEngine {
     }
 
     public  static void checkMeleeAttack() {
-        if(mutantMelee[player.getPlayerLocationX()][player.getPlayerLocationY()] != null) {
-            player.damageHealth(mutantMelee[player.getPlayerLocationX()][player.getPlayerLocationY()].getEnemyDamage());
-            mutantMelee[player.getPlayerLocationX()][player.getPlayerLocationY()] = null;
+        if(mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()] != null) {
+            player.damageHealth(mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()].getEnemyDamage());
+            System.out.printf("The player has killed a mutant and taken %d damage\n", mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()].getEnemyDamage());
+            mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()] = null;
         }
     }
 
@@ -133,7 +134,7 @@ public class GameEngine {
                     } else if(i-1 == mutantRange.getEnemyLocationY() && j == mutantRange.getEnemyLocationX()) {
                         System.out.print("R  ");
                     } else {
-                        System.out.print("#  ");
+                        System.out.printf("%d%d ",i-1,j);
                     }
                 }
                 System.out.print("\n");
