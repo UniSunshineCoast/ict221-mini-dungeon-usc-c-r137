@@ -16,6 +16,8 @@ public class GameEngine {
     private static Cell[][] map;
     private static Player player;
     private static GameState gameState;
+    private static MutantMelee mutantMelee;
+    private static MutantRange mutantRange;
 
     /**
      * Creates a square game board.
@@ -38,6 +40,9 @@ public class GameEngine {
 
         map[0][0].setStyle("-fx-background-color: #7baaa4");
         map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
+
+        player.setPlayerLocationX(0);
+        player.setPlayerLocationY(0);
     }
 
     public static void playerCollect() {
@@ -48,44 +53,31 @@ public class GameEngine {
 
     }
 
-    public static void playerMoveUp() {
-        if (player.setPlayerLocationY(1)) {
+    public static void playerMoveText(boolean x) {
+        if (x) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
+            System.out.printf("Player Health: %d\n", player.getHealth());
             gameState.setSteps(-1);
         } else {
             System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
         }
+    }
+
+    public static void playerMoveUp() {
+        playerMoveText(player.setPlayerLocationY(1));
     }
 
     public static void playerMoveDown() {
-        if (player.setPlayerLocationY(-1)) {
-            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
-            System.out.printf("Total steps %d\n", player.getPlayerSteps());
-            gameState.setSteps(-1);
-        } else {
-            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
-        }
+        playerMoveText(player.setPlayerLocationY(-1));
     }
 
     public static void playerMoveRight() {
-        if (player.setPlayerLocationX(1)) {
-            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
-            System.out.printf("Total steps %d\n", player.getPlayerSteps());
-            gameState.setSteps(-1);
-        } else {
-            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
-        }
+        playerMoveText(player.setPlayerLocationX(1));
     }
 
     public static void playerMoveLeft() {
-        if (player.setPlayerLocationX(-1)) {
-            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
-            System.out.printf("Total steps %d\n", player.getPlayerSteps());
-            gameState.setSteps(-1);
-        } else {
-            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
-        }
+        playerMoveText(player.setPlayerLocationX(-1));
     }
 
     /**
