@@ -5,6 +5,7 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
+import java.util.Random;
 
 public class GameEngine {
 
@@ -17,7 +18,8 @@ public class GameEngine {
     private static Player player;
     private static GameState gameState;
     private static MutantMelee[][] mutantMelee;
-    private static MutantRange mutantRange;
+    private static MutantRange[][] mutantRange;
+    private static Random rand = new Random();
 
     /**
      * Creates a square game board.
@@ -27,9 +29,9 @@ public class GameEngine {
     public GameEngine(int size) {
         map = new Cell[size][size];
         mutantMelee = new MutantMelee[size][size];
+        mutantRange = new MutantRange[size][size];
         player = new Player(size);
         gameState = new GameState(100);
-        mutantRange = new MutantRange(2,2);
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -37,9 +39,13 @@ public class GameEngine {
                 Text text = new Text(i + "," + j);
                 cell.getChildren().add(text);
                 map[i][j] = cell;
-                if (i % 4 == 0 && j % 8 == 0) {
+                if (j % 8 == 0 && j != 0) {
                     MutantMelee mutant = new MutantMelee(i , j);
                     mutantMelee[i][j] = mutant;
+                }
+                if (j % 6 == 0 && j != 0) {
+                    MutantRange mutant = new MutantRange(i, j);
+                    mutantRange[i][j] = mutant;
                 }
             }
         }
@@ -51,14 +57,6 @@ public class GameEngine {
         player.setPlayerLocationY(0);
     }
 
-    public static void playerCollect() {
-
-    }
-
-    public static void playerAttack() {
-
-    }
-
     public  static void checkMeleeAttack() {
         if(mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()] != null) {
             player.damageHealth(mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()].getEnemyDamage());
@@ -67,8 +65,43 @@ public class GameEngine {
         }
     }
 
+    public static void checkRangeAttack() {
+        System.out.println("Checking Ranged Attack");
+        System.out.println(player.getPlayerLocationX());
+        if (player.getPlayerLocationY() != 8 || player.getPlayerLocationY() != 9) {
+            if (mutantRange[player.getPlayerLocationY()+2][player.getPlayerLocationX()] != null) {
+                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()+2][player.getPlayerLocationX()].getEnemyDamage());}
+            }
+        }
+
+        if (player.getPlayerLocationY() != 0 || player.getPlayerLocationY() != 1) {
+//            if (mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()] != null) {
+//                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()].getEnemyDamage());}
+//            }
+        }
+
+//        if (player.getPlayerLocationX() != 8 || player.getPlayerLocationX() != 9) {
+//            System.out.println("Pass");
+//            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2] != null) {
+//                System.out.println("Attempting Damage");
+//                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2].getEnemyDamage());}
+//            }
+//        }
+
+//        if (player.getPlayerLocationX() != 1 || player.getPlayerLocationX() != 0) {
+//            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2] != null) {
+//                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2].getEnemyDamage());}
+//            }
+//        }
+
+        if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()] != null) {
+            mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()] = null;
+        }
+    }
+
     public static void playerMove(boolean x) {
         checkMeleeAttack();
+        checkRangeAttack();
         if (x) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
@@ -131,7 +164,7 @@ public class GameEngine {
                         System.out.print("P  ");
                     } else if(mutantMelee[i -1][j] != null) {
                         System.out.print("M  ");
-                    } else if(i-1 == mutantRange.getEnemyLocationY() && j == mutantRange.getEnemyLocationX()) {
+                    } else if(mutantRange[i -1][j] != null) {
                         System.out.print("R  ");
                     } else {
                         System.out.printf("%d%d ",i-1,j);
