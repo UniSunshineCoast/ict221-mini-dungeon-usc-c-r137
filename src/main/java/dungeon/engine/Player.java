@@ -1,15 +1,10 @@
 package dungeon.engine;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Player implements HealthInterface {
     private int playerSteps;
     private int playerLocationX;
     private int playerLocationY;
-    private ArrayList<String> playerTreasures = new ArrayList<String>();
     private final int playerSize;
-    private int playerMaxHealth;
     private int playerHealth;
     // Player constructor to initialize objects default data structures
     public Player(int x) {
@@ -17,7 +12,6 @@ public class Player implements HealthInterface {
         playerLocationY = 0;
         playerSize = x - 1;
         playerSteps = 0;
-        playerMaxHealth = getMaxHealth();
         playerHealth = getMaxHealth();
     }
 
@@ -72,5 +66,14 @@ public class Player implements HealthInterface {
     @Override
     public boolean isDead() {
         return getHealth() <= 0;
+    }
+
+    @Override
+    public void healHealth(int x) {
+        if (this.playerHealth + x > 10) {
+            this.playerHealth = getMaxHealth();
+        } else {
+            this.playerHealth = getHealth() + x;
+        }
     }
 }

@@ -20,6 +20,7 @@ public class GameEngine {
     private static MutantMelee[][] mutantMelee;
     private static MutantRange[][] mutantRange;
     private static Trap[][] trap;
+    private static HealthPotion[][] healthPotion;
     private static final Random rand = new Random();
 
     /**
@@ -32,6 +33,7 @@ public class GameEngine {
         mutantMelee = new MutantMelee[size][size];
         mutantRange = new MutantRange[size][size];
         trap = new Trap[size][size];
+        healthPotion = new HealthPotion[size][size];
         player = new Player(size);
         gameState = new GameState(100);
 
@@ -53,6 +55,10 @@ public class GameEngine {
                     Trap newTrap = new Trap(i, j);
                     trap[i][j] = newTrap;
                 }
+                if (j % 6 == 0 && j != 0) {
+                    HealthPotion health = new HealthPotion(i, j);
+                    healthPotion[i][j] = health;
+                }
             }
         }
 
@@ -61,6 +67,18 @@ public class GameEngine {
 
         player.setPlayerLocationX(0);
         player.setPlayerLocationY(0);
+    }
+
+    public static void checkHealthPotion() {
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        int heal;
+        if (healthPotion[playerY][playerX] != null) {
+            heal = healthPotion[playerY][playerX].getHealAmount();
+            player.healHealth(heal);
+            System.out.printf("You have heal for %d health from a health potion\n", heal);
+            healthPotion[playerY][playerX] = null;
+        }
     }
 
     public  static void checkMeleeAttack() {
@@ -94,32 +112,45 @@ public class GameEngine {
         if (playerY < 8) {
             if (mutantRange[playerY + 2][playerX] != null) {
                 damage = mutantRange[playerY+2][playerX].getEnemyDamage();
-                if (rand.nextBoolean()) {player.damageHealth(damage);}
+                if (rand.nextBoolean()) {
+                    player.damageHealth(damage);
+                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                }
             }
         }
 
         if (playerY > 1) {
             if (mutantRange[playerY - 2][playerX] != null) {
                 damage = mutantRange[playerY - 2][playerX].getEnemyDamage();
-                if (rand.nextBoolean()) {player.damageHealth(damage);}
+                if (rand.nextBoolean()) {
+                    player.damageHealth(damage);
+                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                }
             }
         }
 
         if (playerX < 8) {
             if (mutantRange[playerY][playerX + 2] != null) {
                 damage = mutantRange[playerY][playerX + 2].getEnemyDamage();
-                if (rand.nextBoolean()) {player.damageHealth(damage);}
+                if (rand.nextBoolean()) {
+                    player.damageHealth(damage);
+                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                }
             }
         }
 
         if (playerX > 1) {
             if (mutantRange[playerY][playerX - 2] != null) {
                 damage = mutantRange[playerY][playerX - 2].getEnemyDamage();
-                if (rand.nextBoolean()) {player.damageHealth(damage);}
+                if (rand.nextBoolean()) {
+                    player.damageHealth(damage);
+                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                }
             }
         }
 
         if (mutantRange[playerY][playerX] != null) {
+            System.out.println("You have killed a ranged mutant.");
             mutantRange[playerY][playerX] = null;
         }
     }
@@ -127,6 +158,7 @@ public class GameEngine {
     public static void playerMove(boolean x) {
         checkMeleeAttack();
         checkRangeAttack();
+        checkHealthPotion();
         checkTrap();
         if (x) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
@@ -194,6 +226,8 @@ public class GameEngine {
                         System.out.print("R  ");
                     } else if (trap[i - 1][j] != null) {
                         System.out.print("T  ");
+                    }  else if (healthPotion[i - 1][j] != null) {
+                        System.out.print("H  ");
                     } else {
                         System.out.printf("%d%d ",i-1,j);
                     }
