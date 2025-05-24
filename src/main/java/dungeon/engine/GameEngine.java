@@ -19,7 +19,7 @@ public class GameEngine {
     private static GameState gameState;
     private static MutantMelee[][] mutantMelee;
     private static MutantRange[][] mutantRange;
-    private static Random rand = new Random();
+    private static final Random rand = new Random();
 
     /**
      * Creates a square game board.
@@ -66,33 +66,29 @@ public class GameEngine {
     }
 
     public static void checkRangeAttack() {
-        System.out.println("Checking Ranged Attack");
-        System.out.println(player.getPlayerLocationX());
-        if (player.getPlayerLocationY() != 8 || player.getPlayerLocationY() != 9) {
+        if (player.getPlayerLocationY() < 8) {
             if (mutantRange[player.getPlayerLocationY()+2][player.getPlayerLocationX()] != null) {
                 if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()+2][player.getPlayerLocationX()].getEnemyDamage());}
             }
         }
 
-        if (player.getPlayerLocationY() != 0 || player.getPlayerLocationY() != 1) {
-//            if (mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()] != null) {
-//                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()].getEnemyDamage());}
-//            }
+        if (player.getPlayerLocationY() > 1) {
+            if (mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()] != null) {
+                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()].getEnemyDamage());}
+            }
         }
 
-//        if (player.getPlayerLocationX() != 8 || player.getPlayerLocationX() != 9) {
-//            System.out.println("Pass");
-//            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2] != null) {
-//                System.out.println("Attempting Damage");
-//                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2].getEnemyDamage());}
-//            }
-//        }
+        if (player.getPlayerLocationX() < 8) {
+            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2] != null) {
+                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2].getEnemyDamage());}
+            }
+        }
 
-//        if (player.getPlayerLocationX() != 1 || player.getPlayerLocationX() != 0) {
-//            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2] != null) {
-//                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2].getEnemyDamage());}
-//            }
-//        }
+        if (player.getPlayerLocationX() > 1) {
+            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2] != null) {
+                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2].getEnemyDamage());}
+            }
+        }
 
         if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()] != null) {
             mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()] = null;
