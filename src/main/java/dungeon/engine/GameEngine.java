@@ -19,6 +19,7 @@ public class GameEngine {
     private static GameState gameState;
     private static MutantMelee[][] mutantMelee;
     private static MutantRange[][] mutantRange;
+    private static Trap[][] trap;
     private static final Random rand = new Random();
 
     /**
@@ -30,6 +31,7 @@ public class GameEngine {
         map = new Cell[size][size];
         mutantMelee = new MutantMelee[size][size];
         mutantRange = new MutantRange[size][size];
+        trap = new Trap[size][size];
         player = new Player(size);
         gameState = new GameState(100);
 
@@ -47,6 +49,10 @@ public class GameEngine {
                     MutantRange mutant = new MutantRange(i, j);
                     mutantRange[i][j] = mutant;
                 }
+                if (j % 4 == 0 && j !=0) {
+                    Trap newTrap = new Trap(i, j);
+                    trap[i][j] = newTrap;
+                }
             }
         }
 
@@ -58,46 +64,70 @@ public class GameEngine {
     }
 
     public  static void checkMeleeAttack() {
-        if(mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()] != null) {
-            player.damageHealth(mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()].getEnemyDamage());
-            System.out.printf("The player has killed a mutant and taken %d damage\n", mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()].getEnemyDamage());
-            mutantMelee[player.getPlayerLocationY()][player.getPlayerLocationX()] = null;
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        int damage;
+        if(mutantMelee[playerY][playerX] != null) {
+            damage = mutantMelee[playerY][playerX].getEnemyDamage();
+            player.damageHealth(damage);
+            System.out.printf("You have killed a mutant and taken %d damage.\n", damage);
+            mutantMelee[playerY][playerX] = null;
+        }
+    }
+
+    public static void checkTrap() {
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        int damage;
+        if (trap[playerX][playerX] != null) {
+            damage = trap[playerY][playerX].getEnemyDamage();
+            player.damageHealth(damage);
+            System.out.printf("You have step on a trap and have taken %d damage.\n", damage);
+            trap[playerY][playerX] = null;
         }
     }
 
     public static void checkRangeAttack() {
-        if (player.getPlayerLocationY() < 8) {
-            if (mutantRange[player.getPlayerLocationY()+2][player.getPlayerLocationX()] != null) {
-                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()+2][player.getPlayerLocationX()].getEnemyDamage());}
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        int damage;
+        if (playerY < 8) {
+            if (mutantRange[playerY + 2][playerX] != null) {
+                damage = mutantRange[playerY+2][playerX].getEnemyDamage();
+                if (rand.nextBoolean()) {player.damageHealth(damage);}
             }
         }
 
-        if (player.getPlayerLocationY() > 1) {
-            if (mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()] != null) {
-                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()-2][player.getPlayerLocationX()].getEnemyDamage());}
+        if (playerY > 1) {
+            if (mutantRange[playerY - 2][playerX] != null) {
+                damage = mutantRange[playerY - 2][playerX].getEnemyDamage();
+                if (rand.nextBoolean()) {player.damageHealth(damage);}
             }
         }
 
-        if (player.getPlayerLocationX() < 8) {
-            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2] != null) {
-                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()+2].getEnemyDamage());}
+        if (playerX < 8) {
+            if (mutantRange[playerY][playerX + 2] != null) {
+                damage = mutantRange[playerY][playerX + 2].getEnemyDamage();
+                if (rand.nextBoolean()) {player.damageHealth(damage);}
             }
         }
 
-        if (player.getPlayerLocationX() > 1) {
-            if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2] != null) {
-                if (rand.nextBoolean()) {player.damageHealth(mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()-2].getEnemyDamage());}
+        if (playerX > 1) {
+            if (mutantRange[playerY][playerX - 2] != null) {
+                damage = mutantRange[playerY][playerX - 2].getEnemyDamage();
+                if (rand.nextBoolean()) {player.damageHealth(damage);}
             }
         }
 
-        if (mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()] != null) {
-            mutantRange[player.getPlayerLocationY()][player.getPlayerLocationX()] = null;
+        if (mutantRange[playerY][playerX] != null) {
+            mutantRange[playerY][playerX] = null;
         }
     }
 
     public static void playerMove(boolean x) {
         checkMeleeAttack();
         checkRangeAttack();
+        checkTrap();
         if (x) {
             System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
             System.out.printf("Total steps %d\n", player.getPlayerSteps());
@@ -158,10 +188,12 @@ public class GameEngine {
                 for(int j = 0; j < map[i-1].length; j++){
                     if(i-1 == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
                         System.out.print("P  ");
-                    } else if(mutantMelee[i -1][j] != null) {
+                    } else if(mutantMelee[i - 1][j] != null) {
                         System.out.print("M  ");
-                    } else if(mutantRange[i -1][j] != null) {
+                    } else if(mutantRange[i - 1][j] != null) {
                         System.out.print("R  ");
+                    } else if (trap[i - 1][j] != null) {
+                        System.out.print("T  ");
                     } else {
                         System.out.printf("%d%d ",i-1,j);
                     }
