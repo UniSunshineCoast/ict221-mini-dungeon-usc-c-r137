@@ -21,6 +21,7 @@ public class GameEngine {
     private static MutantRange[][] mutantRange;
     private static Trap[][] trap;
     private static HealthPotion[][] healthPotion;
+    private static Gold[][] gold;
     private static final Random rand = new Random();
 
     /**
@@ -34,6 +35,7 @@ public class GameEngine {
         mutantRange = new MutantRange[size][size];
         trap = new Trap[size][size];
         healthPotion = new HealthPotion[size][size];
+        gold = new Gold[size][size];
         player = new Player(size);
         gameState = new GameState(100);
 
@@ -59,6 +61,10 @@ public class GameEngine {
                     HealthPotion health = new HealthPotion(i, j);
                     healthPotion[i][j] = health;
                 }
+                if (j % 5 == 0 && j !=0) {
+                    Gold newGold = new Gold(i, j);
+                    gold[i][j] = newGold;
+                }
             }
         }
 
@@ -67,6 +73,18 @@ public class GameEngine {
 
         player.setPlayerLocationX(0);
         player.setPlayerLocationY(0);
+    }
+
+    public static void checkGold() {
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        int score;
+        if (gold[playerY][playerX] != null) {
+            score = gold[playerY][playerX].getScore();
+            gameState.setScore(score);
+            System.out.printf("You have picked up some gold and got %d score", score);
+            gold[playerY][playerX] = null;
+        }
     }
 
     public static void checkHealthPotion() {
@@ -85,10 +103,13 @@ public class GameEngine {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int damage;
+        int score;
         if(mutantMelee[playerY][playerX] != null) {
             damage = mutantMelee[playerY][playerX].getEnemyDamage();
+            score = mutantMelee[playerY][playerX].getEnemyScore();
             player.damageHealth(damage);
-            System.out.printf("You have killed a mutant and taken %d damage.\n", damage);
+            gameState.setScore(score);
+            System.out.printf("You have killed a mutant and taken %d damage and gained %d sore.\n", damage, score);
             mutantMelee[playerY][playerX] = null;
         }
     }
@@ -109,6 +130,7 @@ public class GameEngine {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int damage;
+        int score;
         if (playerY < 8) {
             if (mutantRange[playerY + 2][playerX] != null) {
                 damage = mutantRange[playerY+2][playerX].getEnemyDamage();
@@ -150,23 +172,29 @@ public class GameEngine {
         }
 
         if (mutantRange[playerY][playerX] != null) {
-            System.out.println("You have killed a ranged mutant.");
+            score = mutantRange[playerY][playerX].getEnemyScore();
+            gameState.setScore(score);
+            System.out.printf("You have killed a ranged mutant and got %d score\n", score);
             mutantRange[playerY][playerX] = null;
         }
     }
 
     public static void playerMove(boolean x) {
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
         checkMeleeAttack();
         checkRangeAttack();
         checkHealthPotion();
         checkTrap();
+        checkGold();
         if (x) {
-            System.out.printf("You have moved to %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
-            System.out.printf("Total steps %d\n", player.getPlayerSteps());
+            System.out.printf("You have moved to %d - %d\n", playerX, playerY);
+            System.out.printf("Your score is: %d\n", gameState.getScore());
+            System.out.printf("Player Steps Taken: %d\n", player.getPlayerSteps());
             System.out.printf("Player Health: %d\n", player.getHealth());
             gameState.setSteps(-1);
         } else {
-            System.out.printf("You were unable to move and are still at %d - %d\n", player.getPlayerLocationX(), player.getPlayerLocationY());
+            System.out.printf("You were unable to move and are still at %d - %d\n", playerX, playerY);
         }
     }
 
@@ -228,7 +256,11 @@ public class GameEngine {
                         System.out.print("T  ");
                     }  else if (healthPotion[i - 1][j] != null) {
                         System.out.print("H  ");
-                    } else {
+                    } else if (gold[i - 1][j] != null) {
+                        System.out.print("G  ");
+                    } else if (i -1 ==0 && j == 0) {
+                        System.out.print("E  ");
+                    }else {
                         System.out.printf("%d%d ",i-1,j);
                     }
                 }
