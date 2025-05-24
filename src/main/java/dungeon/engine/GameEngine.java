@@ -41,15 +41,15 @@ public class GameEngine {
                 Text text = new Text(i + "," + j);
                 cell.getChildren().add(text);
                 map[i][j] = cell;
-                if (j % 8 == 0 && j != 0) {
+                if (j % 9 == 0 && j != 0) {
                     MutantMelee mutant = new MutantMelee(i , j);
                     mutantMelee[i][j] = mutant;
                 }
-                if (j % 6 == 0 && j != 0) {
+                if (j % 8 == 0 && j != 0) {
                     MutantRange mutant = new MutantRange(i, j);
                     mutantRange[i][j] = mutant;
                 }
-                if (j % 4 == 0 && j !=0) {
+                if (j % 7 == 0 && j !=0) {
                     Trap newTrap = new Trap(i, j);
                     trap[i][j] = newTrap;
                 }
@@ -79,7 +79,7 @@ public class GameEngine {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int damage;
-        if (trap[playerX][playerX] != null) {
+        if (trap[playerY][playerX] != null) {
             damage = trap[playerY][playerX].getEnemyDamage();
             player.damageHealth(damage);
             System.out.printf("You have step on a trap and have taken %d damage.\n", damage);
