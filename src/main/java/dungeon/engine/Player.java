@@ -15,24 +15,22 @@ public class Player implements HealthInterface {
         playerHealth = getMaxHealth();
     }
 
-    public boolean setPlayerLocationY(int y) {
-        if (playerLocationY + y < 0 || playerLocationY + y > this.playerSize) {
-            return false;
-        } else {
-            this.playerSteps++;
-            this.playerLocationY = playerLocationY + y;
-            return true;
-        }
+    public boolean checkPlayerMoveY(int y) {
+        return this.playerLocationY + y >= 0 && this.playerLocationY + y <= this.playerSize;
     }
 
-    public boolean setPlayerLocationX(int x) {
-        if (playerLocationX + x < 0 || playerLocationX + x > this.playerSize) {
-            return false;
-        } else {
-            this.playerSteps++;
-            this.playerLocationX = playerLocationX + x;
-            return true;
-        }
+    public boolean checkPlayerMoveX(int x) {
+        return this.playerLocationX + x >= 0 && this.playerLocationX + x <= this.playerSize;
+    }
+
+    public void setPlayerLocationY(int y) {
+        this.playerSteps++;
+        this.playerLocationY = this.playerLocationY + y;
+    }
+
+    public void setPlayerLocationX(int x) {
+        this.playerSteps++;
+        this.playerLocationX = this.playerLocationX + x;
     }
 
     public int getPlayerLocationY() {

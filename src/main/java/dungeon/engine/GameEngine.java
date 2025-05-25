@@ -22,6 +22,9 @@ public class GameEngine {
     private static Trap trap;
     private static HealthPotion healthPotion;
     private static Gold gold;
+    private static Wall wall;
+    private static Ladder ladder;
+    private static Maps gameMap;
     private static final Random rand = new Random();
     private static Tiles[][] tiles;
 
@@ -34,7 +37,9 @@ public class GameEngine {
         map = new Cell[size][size];
         tiles = new Tiles[size][size];
         player = new Player(size);
+        gameMap = new Maps();
         gameState = new GameState(100);
+        int[][] playerMap = (int[][]) gameMap.getMapVaules();
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -42,6 +47,29 @@ public class GameEngine {
                 Text text = new Text(i + "," + j);
                 cell.getChildren().add(text);
                 map[i][j] = cell;
+            }
+        }
+
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (playerMap[i][j] == 1) {
+                    Wall newWall = new Wall(i, j);
+                    tiles[i][j] = newWall;
+                }
+            }
+        }
+
+        for (int p = 0; p < 1; p++) {
+            boolean running = true;
+            while(running) {
+                int x = 5 + rand.nextInt(4);
+                int y = rand.nextInt(9);
+                if (tiles[x][y] == null) {
+                    Ladder newLadder = new Ladder(x, y);
+                    tiles[x][y] = newLadder;
+                    running = false;
+                }
             }
         }
 
@@ -125,7 +153,7 @@ public class GameEngine {
             if (tiles[playerY][playerX].getTileType() == 4) {
                 score = tiles[playerY][playerX].getTileScore();
                 gameState.setScore(score);
-                System.out.printf("You have picked up some gold and got %d score", score);
+                System.out.printf("You have picked up some gold and got %d score\n", score);
                 tiles[playerY][playerX] = null;
             }
         }
@@ -268,19 +296,75 @@ public class GameEngine {
     }
 
     public static void playerMoveUp() {
-        playerMove(player.setPlayerLocationY(1));
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        if (player.checkPlayerMoveY(1)) {
+            if (tiles[playerY + 1][playerX] == null) {
+                player.setPlayerLocationY(1);
+                playerMove(true);
+            } else if (tiles[playerY +1][playerX].getTileType() == 0) {
+                playerMove(false);
+            } else {
+                player.setPlayerLocationY(1);
+                playerMove(true);
+            }
+        } else {
+            playerMove(false);
+        }
     }
 
     public static void playerMoveDown() {
-        playerMove(player.setPlayerLocationY(-1));
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        if (player.checkPlayerMoveY(-1)) {
+            if (tiles[playerY - 1][playerX] == null) {
+                player.setPlayerLocationY(-1);
+                playerMove(true);
+            } else if (tiles[playerY - 1][playerX].getTileType() == 0) {
+                playerMove(false);
+            } else {
+                player.setPlayerLocationY(-1);
+                playerMove(true);
+            }
+        } else {
+            playerMove(false);
+        }
     }
 
     public static void playerMoveRight() {
-        playerMove(player.setPlayerLocationX(1));
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        if (player.checkPlayerMoveX(1)) {
+            if (tiles[playerY][playerX + 1] == null) {
+                player.setPlayerLocationX(1);
+                playerMove(true);
+            } else if (tiles[playerY][playerX + 1].getTileType() == 0) {
+                playerMove(false);
+            } else {
+                player.setPlayerLocationX(1);
+                playerMove(true);
+            }
+        } else {
+            playerMove(false);
+        }
     }
 
     public static void playerMoveLeft() {
-        playerMove(player.setPlayerLocationX(-1));
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        if (player.checkPlayerMoveX(-1)) {
+            if (tiles[playerY][playerX - 1] == null) {
+                player.setPlayerLocationX(-1);
+                playerMove(true);
+            } else if (tiles[playerY][playerX - 1].getTileType() == 0) {
+                playerMove(false);
+            } else {
+                player.setPlayerLocationX(-1);
+                playerMove(true);
+            }
+        } else {
+            playerMove(false);
+        }
     }
 
     /**
@@ -305,17 +389,25 @@ public class GameEngine {
      * Plays a text-based game
      */
     public static void main(String[] args) throws IOException {
-        GameEngine engine = new GameEngine(10, 3);
-        System.out.printf("The size of map is %d * %d\n", engine.getSize(), engine.getSize());
-
         String userInput;
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+        int d = 3;
+        System.out.println("Enter your difficulty 1 - 10");
+        userInput = r.readLine();
+        if (userInput.matches("[0-10]+")) {
+            d = Integer.parseInt(userInput);
+        }
+        GameEngine engine = new GameEngine(10, d);
+        System.out.printf("The size of map is %d * %d\n", engine.getSize(), engine.getSize());
+
         System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
         while(true) {
             for(int i = map.length; i > 0; i--) {
                 for(int j = 0; j < map[i-1].length; j++){
                     if(i-1 == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
                         System.out.print("P  ");
+                    } else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 0) {
+                        System.out.print("#  ");
                     } else if(tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 1) {
                         System.out.print("M  ");
                     } else if(tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 2) {
@@ -326,10 +418,12 @@ public class GameEngine {
                         System.out.print("H  ");
                     } else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 4) {
                         System.out.print("G  ");
+                    } else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 6) {
+                        System.out.print("L  ");
                     } else if (i -1 ==0 && j == 0) {
                         System.out.print("E  ");
                     }else {
-                        System.out.print("-  ");
+                        System.out.print(".  ");
                     }
                 }
                 System.out.print("\n");
