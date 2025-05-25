@@ -17,25 +17,22 @@ public class GameEngine {
     private static Cell[][] map;
     private static Player player;
     private static GameState gameState;
-    private static MutantMelee[][] mutantMelee;
-    private static MutantRange[][] mutantRange;
-    private static Trap[][] trap;
-    private static HealthPotion[][] healthPotion;
-    private static Gold[][] gold;
+    private static MutantMelee mutantMelee;
+    private static MutantRange mutantRange;
+    private static Trap trap;
+    private static HealthPotion healthPotion;
+    private static Gold gold;
     private static final Random rand = new Random();
+    private static Tiles[][] tiles;
 
     /**
      * Creates a square game board.
      *
      * @param size the width and height.
      */
-    public GameEngine(int size) {
+    public GameEngine(int size, int d) {
         map = new Cell[size][size];
-        mutantMelee = new MutantMelee[size][size];
-        mutantRange = new MutantRange[size][size];
-        trap = new Trap[size][size];
-        healthPotion = new HealthPotion[size][size];
-        gold = new Gold[size][size];
+        tiles = new Tiles[size][size];
         player = new Player(size);
         gameState = new GameState(100);
 
@@ -45,25 +42,70 @@ public class GameEngine {
                 Text text = new Text(i + "," + j);
                 cell.getChildren().add(text);
                 map[i][j] = cell;
-                if (j % 9 == 0 && j != 0) {
-                    MutantMelee mutant = new MutantMelee(i , j);
-                    mutantMelee[i][j] = mutant;
+            }
+        }
+
+        for (int p = 0; p < 3; p++) {
+            boolean running = true;
+            while(running) {
+                int x = rand.nextInt(9);
+                int y = rand.nextInt(9);
+                if (tiles[x][y] == null) {
+                    MutantMelee newMutant = new MutantMelee(x, y);
+                    tiles[x][y] = newMutant;
+                    running = false;
                 }
-                if (j % 8 == 0 && j != 0) {
-                    MutantRange mutant = new MutantRange(i, j);
-                    mutantRange[i][j] = mutant;
+            }
+        }
+
+        for (int p = 0; p < d; p++) {
+            boolean running = true;
+            while(running) {
+                int x = rand.nextInt(9);
+                int y = rand.nextInt(9);
+                if (tiles[x][y] == null) {
+                    MutantRange newMutant = new MutantRange(x, y);
+                    tiles[x][y] = newMutant;
+                    running = false;
                 }
-                if (j % 7 == 0 && j !=0) {
-                    Trap newTrap = new Trap(i, j);
-                    trap[i][j] = newTrap;
+            }
+        }
+
+        for (int p = 0; p < 5; p++) {
+            boolean running = true;
+            while(running) {
+                int x = rand.nextInt(9);
+                int y = rand.nextInt(9);
+                if (tiles[x][y] == null) {
+                    Trap newTrap = new Trap(x, y);
+                    tiles[x][y] = newTrap;
+                    running = false;
                 }
-                if (j % 6 == 0 && j != 0) {
-                    HealthPotion health = new HealthPotion(i, j);
-                    healthPotion[i][j] = health;
+            }
+        }
+
+        for (int p = 0; p < 5; p++) {
+            boolean running = true;
+            while(running) {
+                int x = rand.nextInt(9);
+                int y = rand.nextInt(9);
+                if (tiles[x][y] == null) {
+                    Gold newGold = new Gold(x, y);
+                    tiles[x][y] = newGold;
+                    running = false;
                 }
-                if (j % 5 == 0 && j !=0) {
-                    Gold newGold = new Gold(i, j);
-                    gold[i][j] = newGold;
+            }
+        }
+
+        for (int p = 0; p < 2; p++) {
+            boolean running = true;
+            while(running) {
+                int x = rand.nextInt(9);
+                int y = rand.nextInt(9);
+                if (tiles[x][y] == null) {
+                    HealthPotion newHealthPotion = new HealthPotion(x, y);
+                    tiles[x][y] = newHealthPotion;
+                    running = false;
                 }
             }
         }
@@ -79,11 +121,13 @@ public class GameEngine {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int score;
-        if (gold[playerY][playerX] != null) {
-            score = gold[playerY][playerX].getScore();
-            gameState.setScore(score);
-            System.out.printf("You have picked up some gold and got %d score", score);
-            gold[playerY][playerX] = null;
+        if (tiles[playerY][playerX] != null) {
+            if (tiles[playerY][playerX].getTileType() == 4) {
+                score = tiles[playerY][playerX].getTileScore();
+                gameState.setScore(score);
+                System.out.printf("You have picked up some gold and got %d score", score);
+                tiles[playerY][playerX] = null;
+            }
         }
     }
 
@@ -91,11 +135,13 @@ public class GameEngine {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int heal;
-        if (healthPotion[playerY][playerX] != null) {
-            heal = healthPotion[playerY][playerX].getHealAmount();
-            player.healHealth(heal);
-            System.out.printf("You have heal for %d health from a health potion\n", heal);
-            healthPotion[playerY][playerX] = null;
+        if (tiles[playerY][playerX] != null) {
+            if (tiles[playerY][playerX].getTileType() == 5) {
+                heal = tiles[playerY][playerX].getTileHeal();
+                player.healHealth(heal);
+                System.out.printf("You have heal for %d health from a health potion\n", heal);
+                tiles[playerY][playerX] = null;
+            }
         }
     }
 
@@ -104,13 +150,15 @@ public class GameEngine {
         int playerX = player.getPlayerLocationX();
         int damage;
         int score;
-        if(mutantMelee[playerY][playerX] != null) {
-            damage = mutantMelee[playerY][playerX].getEnemyDamage();
-            score = mutantMelee[playerY][playerX].getEnemyScore();
-            player.damageHealth(damage);
-            gameState.setScore(score);
-            System.out.printf("You have killed a mutant and taken %d damage and gained %d sore.\n", damage, score);
-            mutantMelee[playerY][playerX] = null;
+        if(tiles[playerY][playerX] != null) {
+            if (tiles[playerY][playerX].getTileType() == 1) {
+                damage = tiles[playerY][playerX].getTileDamage();
+                score = tiles[playerY][playerX].getTileScore();
+                player.damageHealth(damage);
+                gameState.setScore(score);
+                System.out.printf("You have killed a mutant and taken %d damage and gained %d sore.\n", damage, score);
+                tiles[playerY][playerX] = null;
+            }
         }
     }
 
@@ -118,11 +166,13 @@ public class GameEngine {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int damage;
-        if (trap[playerY][playerX] != null) {
-            damage = trap[playerY][playerX].getEnemyDamage();
+        if (tiles[playerY][playerX] != null) {
+            if (tiles[playerY][playerX].getTileType() == 3) {
+            damage = tiles[playerY][playerX].getTileDamage();
             player.damageHealth(damage);
             System.out.printf("You have step on a trap and have taken %d damage.\n", damage);
-            trap[playerY][playerX] = null;
+            tiles[playerY][playerX] = null;
+            }
         }
     }
 
@@ -132,50 +182,60 @@ public class GameEngine {
         int damage;
         int score;
         if (playerY < 8) {
-            if (mutantRange[playerY + 2][playerX] != null) {
-                damage = mutantRange[playerY+2][playerX].getEnemyDamage();
-                if (rand.nextBoolean()) {
-                    player.damageHealth(damage);
-                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+            if (tiles[playerY + 2][playerX] != null) {
+                if (tiles[playerY + 2][playerX].getTileType() == 2) {
+                    damage = tiles[playerY + 2][playerX].getTileDamage();
+                    if (rand.nextBoolean()) {
+                        player.damageHealth(damage);
+                        System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                    }
                 }
             }
         }
 
         if (playerY > 1) {
-            if (mutantRange[playerY - 2][playerX] != null) {
-                damage = mutantRange[playerY - 2][playerX].getEnemyDamage();
-                if (rand.nextBoolean()) {
-                    player.damageHealth(damage);
-                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+            if (tiles[playerY - 2][playerX] != null) {
+                if (tiles[playerY -2][playerX].getTileType() == 2) {
+                    damage = tiles[playerY - 2][playerX].getTileDamage();
+                    if (rand.nextBoolean()) {
+                        player.damageHealth(damage);
+                        System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                    }
                 }
             }
         }
 
         if (playerX < 8) {
-            if (mutantRange[playerY][playerX + 2] != null) {
-                damage = mutantRange[playerY][playerX + 2].getEnemyDamage();
-                if (rand.nextBoolean()) {
-                    player.damageHealth(damage);
-                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+            if (tiles[playerY][playerX + 2] != null) {
+                if (tiles[playerY][playerX + 2].getTileType() == 2) {
+                    damage = tiles[playerY][playerX + 2].getTileType();
+                    if (rand.nextBoolean()) {
+                        player.damageHealth(damage);
+                        System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                    }
                 }
             }
         }
 
         if (playerX > 1) {
-            if (mutantRange[playerY][playerX - 2] != null) {
-                damage = mutantRange[playerY][playerX - 2].getEnemyDamage();
-                if (rand.nextBoolean()) {
-                    player.damageHealth(damage);
-                    System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+            if (tiles[playerY][playerX - 2] != null) {
+                if (tiles[playerY][playerX - 2].getTileType() == 2) {
+                    damage = tiles[playerY][playerX - 2].getTileDamage();
+                    if (rand.nextBoolean()) {
+                        player.damageHealth(damage);
+                        System.out.printf("You been shoot by a ranged mutant and have taken %d damage.\n", damage);
+                    }
                 }
             }
         }
 
-        if (mutantRange[playerY][playerX] != null) {
-            score = mutantRange[playerY][playerX].getEnemyScore();
-            gameState.setScore(score);
-            System.out.printf("You have killed a ranged mutant and got %d score\n", score);
-            mutantRange[playerY][playerX] = null;
+        if (tiles[playerY][playerX] != null) {
+            if (tiles[playerY][playerX].getTileType() == 2) {
+                score = tiles[playerY][playerX].getTileScore();
+                gameState.setScore(score);
+                System.out.printf("You have killed a ranged mutant and got %d score\n", score);
+                tiles[playerY][playerX] = null;
+            }
         }
     }
 
@@ -245,32 +305,31 @@ public class GameEngine {
      * Plays a text-based game
      */
     public static void main(String[] args) throws IOException {
-        GameEngine engine = new GameEngine(10);
+        GameEngine engine = new GameEngine(10, 3);
         System.out.printf("The size of map is %d * %d\n", engine.getSize(), engine.getSize());
 
         String userInput;
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
-        System.out.println(mutantMelee[8][8]);
         while(true) {
             for(int i = map.length; i > 0; i--) {
                 for(int j = 0; j < map[i-1].length; j++){
                     if(i-1 == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
                         System.out.print("P  ");
-                    } else if(mutantMelee[i - 1][j] != null) {
+                    } else if(tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 1) {
                         System.out.print("M  ");
-                    } else if(mutantRange[i - 1][j] != null) {
+                    } else if(tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 2) {
                         System.out.print("R  ");
-                    } else if (trap[i - 1][j] != null) {
+                    } else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 3) {
                         System.out.print("T  ");
-                    }  else if (healthPotion[i - 1][j] != null) {
+                    }  else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 5) {
                         System.out.print("H  ");
-                    } else if (gold[i - 1][j] != null) {
+                    } else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 4) {
                         System.out.print("G  ");
                     } else if (i -1 ==0 && j == 0) {
                         System.out.print("E  ");
                     }else {
-                        System.out.printf("%d%d ",i-1,j);
+                        System.out.print("-  ");
                     }
                 }
                 System.out.print("\n");

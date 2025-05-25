@@ -1,23 +1,11 @@
 package dungeon.engine;
 
-public class MutantMelee extends Enemy {
-    private final int enemyLocationX;
-    private final int enemyLocationY;
+public class MutantMelee extends Tiles {
 
     public MutantMelee(int x, int y) {
-        enemyLocationX = x;
-        enemyLocationY = y;
-    }
-
-    public int getEnemyLocationY() {
-        return enemyLocationY;
-    }
-
-    public int getEnemyLocationX() {
-        return enemyLocationX;
-    }
-
-    public int getEnemyType() {
-        return 1;
+        tileX = x;
+        tileY = y;
+        tileType = 1;
+        tileDamage = 2;
     }
 }

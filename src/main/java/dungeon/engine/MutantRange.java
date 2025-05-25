@@ -1,23 +1,11 @@
 package dungeon.engine;
 
-public class MutantRange extends Enemy {
-    private final int enemyLocationX;
-    private final int enemyLocationY;
+public class MutantRange extends Tiles {
 
     public MutantRange(int x, int y) {
-        enemyLocationX = x;
-        enemyLocationY = y;
-    }
-
-    public int getEnemyLocationY() {
-        return enemyLocationY;
-    }
-
-    public int getEnemyLocationX() {
-        return enemyLocationX;
-    }
-
-    public int getEnemyType() {
-        return 2;
+        tileX = x;
+        tileY = y;
+        tileDamage = 2;
+        tileType = 2;
     }
 }

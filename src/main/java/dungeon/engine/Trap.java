@@ -1,20 +1,9 @@
 package dungeon.engine;
 
-public class Trap extends Enemy{
-    private final int trapLocationX;
-    private final int trapLocationY;
-
+public class Trap extends Tiles {
     public Trap(int x, int y) {
-        trapLocationX = x;
-        trapLocationY = y;
+        tileX = x;
+        tileY = y;
+        tileType = 3;
     }
-
-    public int getTrapLocationY() {
-        return trapLocationY;
-    }
-
-    public int getTrapLocationX() {
-        return trapLocationX;
-    }
-
 }
