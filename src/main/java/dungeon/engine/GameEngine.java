@@ -179,6 +179,14 @@ public class GameEngine {
         }
     }
 
+    public static void checkPlayerConditioners() {
+        if (player.isDead()) {
+
+        } else if (gameState.getSteps() <= 0) {
+
+        }
+    }
+
     public static void playerMove(boolean x) {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
@@ -187,6 +195,7 @@ public class GameEngine {
         checkHealthPotion();
         checkTrap();
         checkGold();
+        checkPlayerConditioners();
         if (x) {
             System.out.printf("You have moved to %d - %d\n", playerX, playerY);
             System.out.printf("Your score is: %d\n", gameState.getScore());
