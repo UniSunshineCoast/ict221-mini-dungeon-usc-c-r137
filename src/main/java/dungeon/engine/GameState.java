@@ -3,10 +3,12 @@ package dungeon.engine;
 public class GameState {
     private int steps;
     private int score;
+    private int level;
 
     public GameState(int x) {
         steps = x;
         score = 0;
+        level = 1;
     }
 
     public void setScore(int x) {
@@ -23,5 +25,13 @@ public class GameState {
 
     public int getSteps() {
         return steps;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
