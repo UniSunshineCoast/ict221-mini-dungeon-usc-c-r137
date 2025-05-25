@@ -13,7 +13,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        engine = new GameEngine(10, 3);
+        engine = new GameEngine(10, 3, 0, 0);
 
         updateGui();
     }

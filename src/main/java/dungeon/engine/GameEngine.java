@@ -15,8 +15,8 @@ public class GameEngine {
      * Note: depending on your game, you might want to change this from 'int' to String or something?
      */
     private static Cell[][] map;
-    private static Player player;
-    private static GameState gameState;
+    private static final Player player = new Player(10);
+    private static final GameState gameState = new GameState(100);
     private static MutantMelee mutantMelee;
     private static MutantRange mutantRange;
     private static Trap trap;
@@ -24,21 +24,19 @@ public class GameEngine {
     private static Gold gold;
     private static Wall wall;
     private static Ladder ladder;
+    private static Entry entry;
     private static Maps gameMap;
     private static final Random rand = new Random();
     private static Tiles[][] tiles;
-
     /**
      * Creates a square game board.
      *
      * @param size the width and height.
      */
-    public GameEngine(int size, int d) {
+    public GameEngine(int size, int d, int startX, int startY) {
         map = new Cell[size][size];
         tiles = new Tiles[size][size];
-        player = new Player(size);
         gameMap = new Maps();
-        gameState = new GameState(100);
         int[][] playerMap = (int[][]) gameMap.getMapVaules();
 
         for (int i = 0; i < size; i++) {
@@ -50,6 +48,8 @@ public class GameEngine {
             }
         }
 
+        Entry newEntry = new Entry(startX, startY);
+        tiles[startX][startY] = newEntry;
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -141,8 +141,25 @@ public class GameEngine {
         map[0][0].setStyle("-fx-background-color: #7baaa4");
         map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
 
-        player.setPlayerLocationX(0);
-        player.setPlayerLocationY(0);
+        player.setPlayerLocationX(startX);
+        player.setPlayerLocationY(startY);
+    }
+
+    public static void checkLadder() {
+        int playerY = player.getPlayerLocationY();
+        int playerX = player.getPlayerLocationX();
+        if (tiles[playerY][playerX] != null) {
+            if (tiles[playerY][playerX].getTileType() == 6) {
+                if (gameState.getLevel() == 1) {
+                    System.out.println("You found the ladder! Advancing to Level 2...");
+                    System.out.printf("Starting Level 2 with difficulty %d\n", gameState.getDifficulty() + 2);
+                    gameState.setLevel(2);
+                    GameEngine engine = new GameEngine(10, gameState.getDifficulty() + 2, playerX, playerY);
+                } else {
+
+                }
+            }
+        }
     }
 
     public static void checkGold() {
@@ -284,14 +301,13 @@ public class GameEngine {
         checkTrap();
         checkGold();
         checkPlayerConditioners();
+        checkLadder();
         if (x) {
-            System.out.printf("You have moved to %d - %d\n", playerX, playerY);
-            System.out.printf("Your score is: %d\n", gameState.getScore());
-            System.out.printf("Player Steps Taken: %d\n", player.getPlayerSteps());
-            System.out.printf("Player Health: %d\n", player.getHealth());
+            System.out.printf("You have moved to (%d,%d)\n", playerX, playerY);
+            System.out.printf("Health: %d/%d | Score %d | Steps taken : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), player.getPlayerSteps());
             gameState.setSteps(-1);
         } else {
-            System.out.printf("You were unable to move and are still at %d - %d\n", playerX, playerY);
+            System.out.printf("You were unable to move and are still at (%d,%d)\n", playerX, playerY);
         }
     }
 
@@ -396,12 +412,13 @@ public class GameEngine {
         userInput = r.readLine();
         if (userInput.matches("[0-10]+")) {
             d = Integer.parseInt(userInput);
+            gameState.setDifficulty(d);
         }
-        GameEngine engine = new GameEngine(10, d);
-        System.out.printf("The size of map is %d * %d\n", engine.getSize(), engine.getSize());
+        GameEngine engine = new GameEngine(10, d, 0, 0);
 
         System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
         while(true) {
+            System.out.println("\n=== DUNGEON MAP ===");
             for(int i = map.length; i > 0; i--) {
                 for(int j = 0; j < map[i-1].length; j++){
                     if(i-1 == player.getPlayerLocationY() && j == player.getPlayerLocationX()) {
@@ -420,7 +437,7 @@ public class GameEngine {
                         System.out.print("G  ");
                     } else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 6) {
                         System.out.print("L  ");
-                    } else if (i -1 ==0 && j == 0) {
+                    } else if (tiles[i - 1][j] != null && tiles[i - 1][j].getTileType() == 7) {
                         System.out.print("E  ");
                     }else {
                         System.out.print(".  ");
@@ -428,7 +445,7 @@ public class GameEngine {
                 }
                 System.out.print("\n");
             }
-            System.out.println("Enter your move");
+            System.out.print("\nEnter command: ");
             userInput = r.readLine();
             if (userInput.equalsIgnoreCase("left")) {
                 playerMoveLeft();

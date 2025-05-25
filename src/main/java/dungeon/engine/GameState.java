@@ -4,6 +4,7 @@ public class GameState {
     private int steps;
     private int score;
     private int level;
+    private int difficulty;
 
     public GameState(int x) {
         steps = x;
@@ -33,5 +34,13 @@ public class GameState {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 }
