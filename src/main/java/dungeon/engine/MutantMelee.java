@@ -7,5 +7,6 @@ public class MutantMelee extends Tiles {
         tileY = y;
         tileType = 1;
         tileDamage = 2;
+        tileScore = 2;
     }
 }

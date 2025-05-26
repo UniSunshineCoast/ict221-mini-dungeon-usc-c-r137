@@ -5,5 +5,6 @@ public class Trap extends Tiles {
         tileX = x;
         tileY = y;
         tileType = 3;
+        tileDamage = 2;
     }
 }

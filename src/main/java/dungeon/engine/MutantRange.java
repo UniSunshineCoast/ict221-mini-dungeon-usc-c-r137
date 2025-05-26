@@ -7,5 +7,6 @@ public class MutantRange extends Tiles {
         tileY = y;
         tileDamage = 2;
         tileType = 2;
+        tileScore = 2;
     }
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.util.Random;
+import java.util.Arrays;
 
 public class GameEngine {
 
@@ -37,7 +38,6 @@ public class GameEngine {
         map = new Cell[size][size];
         tiles = new Tiles[size][size];
         gameMap = new Maps();
-        int[][] playerMap = (int[][]) gameMap.getMapVaules();
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -48,8 +48,23 @@ public class GameEngine {
             }
         }
 
+       generateTiles(size, d, startX, startY);
+
+        map[0][0].setStyle("-fx-background-color: #7baaa4");
+        map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
+
+        player.setPlayerLocationX(startX);
+        player.setPlayerLocationY(startY);
+    }
+
+    public static void generateTiles(int size, int d, int startX, int startY) {
+        for (Tiles[] tile : tiles) {
+            Arrays.fill(tile, null);
+        }
+        int[][] playerMap = (int[][]) gameMap.getMapVaules();
+
         Entry newEntry = new Entry(startX, startY);
-        tiles[startX][startY] = newEntry;
+        tiles[startY][startX] = newEntry;
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -137,12 +152,6 @@ public class GameEngine {
                 }
             }
         }
-
-        map[0][0].setStyle("-fx-background-color: #7baaa4");
-        map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
-
-        player.setPlayerLocationX(startX);
-        player.setPlayerLocationY(startY);
     }
 
     public static void checkLadder() {
@@ -154,7 +163,7 @@ public class GameEngine {
                     System.out.println("You found the ladder! Advancing to Level 2...");
                     System.out.printf("Starting Level 2 with difficulty %d\n", gameState.getDifficulty() + 2);
                     gameState.setLevel(2);
-                    GameEngine engine = new GameEngine(10, gameState.getDifficulty() + 2, playerX, playerY);
+                    generateTiles(10, gameState.getDifficulty() + 2, playerX, playerY);
                 } else {
 
                 }
