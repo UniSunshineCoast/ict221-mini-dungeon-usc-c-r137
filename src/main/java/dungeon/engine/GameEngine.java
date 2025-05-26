@@ -2,10 +2,7 @@ package dungeon.engine;
 
 import javafx.scene.text.Text;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
+import java.io.*;
 import java.util.Random;
 import java.util.Arrays;
 
@@ -17,8 +14,8 @@ public class GameEngine {
      * Note: depending on your game, you might want to change this from 'int' to String or something?
      */
     private static Cell[][] map;
-    private static final Player player = new Player(10);
-    private static final GameState gameState = new GameState(100);
+    private static Player player;
+    private static GameState gameState;
     private static MutantMelee mutantMelee;
     private static MutantRange mutantRange;
     private static Trap trap;
@@ -48,6 +45,8 @@ public class GameEngine {
     public GameEngine(int size, int d, int startX, int startY) {
         map = new Cell[size][size];
         tiles = new Tiles[size][size];
+        player = new Player(size);
+        gameState = new GameState(100);
         gameMap = new Maps();
 
         for (int i = 0; i < size; i++) {
@@ -63,9 +62,24 @@ public class GameEngine {
 
         map[0][0].setStyle("-fx-background-color: #7baaa4");
         map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
+    }
 
-        player.setPlayerLocationX(startX);
-        player.setPlayerLocationY(startY);
+    private static void deleteSave() {
+        File tileSave = new File("savedtiles.txt");
+        File playerSave = new  File("savedplayer.txt");
+        File gameStateFileName = new File("savedgamestate.txt");
+
+        if (tileSave.exists()) {
+            tileSave.delete();
+        }
+
+        if (playerSave.exists()) {
+            playerSave.delete();
+        }
+
+        if (gameStateFileName.exists()) {
+            gameStateFileName.delete();
+        }
     }
 
     public static void gameWin() throws IOException {
@@ -74,6 +88,7 @@ public class GameEngine {
         System.out.printf("Final score %d\n", gameState.getScore());
         printHighscore();
         highscores.saveHighscores();
+        deleteSave();
         System.exit(0);
     }
 
@@ -84,6 +99,7 @@ public class GameEngine {
         System.out.printf("Final score %d\n", gameState.getScore());
         printHighscore();
         highscores.saveHighscores();
+        deleteSave();
         System.exit(0);
     }
 
@@ -95,6 +111,72 @@ public class GameEngine {
                     System.out.print(string + " ");
             }
             System.out.print("\n");
+        }
+    }
+
+    public static  void saveGame() {
+        String tileFileName = "savedtiles.txt";
+        String playerFileName = "savedplayer.txt";
+        String gameStateFileName = "savedgamestate.txt";
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tileFileName))) {
+            oos.writeInt(tiles.length);
+            oos.writeInt(tiles[0].length);
+            for (Tiles[] row : tiles) {
+                for (Tiles obj : row) {
+                    oos.writeObject(obj);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(playerFileName))) {
+            oos.writeObject(player);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(gameStateFileName))) {
+            oos.writeObject(gameState);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.exit(0);
+    }
+
+    public static void loadGame(int size) {
+        String tileFileName = "savedtiles.txt";
+        String playerFileName = "savedplayer.txt";
+        String gameStateFileName = "savedgamestate.txt";
+        map = new Cell[size][size];
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(tileFileName))) {
+            int rows = ois.readInt();
+            int cols = ois.readInt();
+            tiles = new Tiles[rows][cols];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    tiles[i][j] = (Tiles) ois.readObject();
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(playerFileName))) {
+            player = new Player(size);
+            player = (Player) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(gameStateFileName))) {
+            gameState = new GameState(100);
+            gameState = (GameState) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -462,21 +544,27 @@ public class GameEngine {
      * Plays a text-based game
      */
     public static void main(String[] args) throws IOException {
+        int size = 10;
         String userInput;
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         int d = 3;
-        System.out.println("Enter your difficulty 1 - 10");
+        System.out.println("Do you want to load your save? Y/N");
         userInput = r.readLine();
-        if (userInput.matches("[0-10]+")) {
-            d = Integer.parseInt(userInput);
-            gameState.setDifficulty(d);
+        if (userInput.equalsIgnoreCase("y")) {
+            loadGame(size);
+        } else {
+            System.out.println("Enter your difficulty 1 - 10");
+            userInput = r.readLine();
+            if (userInput.matches("[0-10]+")) {
+                d = Integer.parseInt(userInput);
+                gameState.setDifficulty(d);
+            }
+            GameEngine engine = new GameEngine(size, d, 0, 0);
         }
-        GameEngine engine = new GameEngine(10, d, 0, 0);
 
-        gameState.setScore(17);
-        gameWin();
-
-        System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
+        System.out.println("To move enter 'left' to move left, 'right' to move right, 'up' to move up,\n" +
+                            "'down' to move down, 'x' to exit, 'save' to save the game");
+        System.out.printf("Health: %d/%d | Score %d | Steps Remaining : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), gameState.getSteps());
         while(true) {
             System.out.println("\n=== DUNGEON MAP ===");
             for(int i = map.length; i > 0; i--) {
@@ -515,6 +603,8 @@ public class GameEngine {
                 playerMoveUp();
             } else if (userInput.equalsIgnoreCase("down")) {
                 playerMoveDown();
+            } else if (userInput.equalsIgnoreCase("save")) {
+                saveGame();
             } else if (userInput.equalsIgnoreCase("x")) {
                 break;
             }

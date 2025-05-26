@@ -1,6 +1,8 @@
 package dungeon.engine;
 
-public class GameState {
+import java.io.Serializable;
+
+public class GameState implements Serializable {
     private int steps;
     private int score;
     private int level;

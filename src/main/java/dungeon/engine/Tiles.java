@@ -1,6 +1,8 @@
 package dungeon.engine;
 
-public class Tiles {
+import java.io.Serializable;
+
+public class Tiles implements Serializable {
     protected int tileDamage;
     protected int tileX;
     protected int tileY;

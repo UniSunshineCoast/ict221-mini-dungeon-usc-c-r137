@@ -1,6 +1,8 @@
 package dungeon.engine;
 
-public class Player implements HealthInterface {
+import java.io.Serializable;
+
+public class Player implements HealthInterface, Serializable {
     private int playerLocationX;
     private int playerLocationY;
     private final int playerSize;
