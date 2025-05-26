@@ -21,7 +21,7 @@ public class GameState {
     }
 
     public void setSteps(int x) {
-        steps = steps + x;
+        steps = steps - x;
     }
 
     public int getSteps() {

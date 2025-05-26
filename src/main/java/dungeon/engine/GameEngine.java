@@ -57,6 +57,19 @@ public class GameEngine {
         player.setPlayerLocationY(startY);
     }
 
+    public static void gameWin() {
+        System.out.println("You have won.");
+        System.out.printf("Final score %d\n", gameState.getScore());
+        System.exit(0);
+    }
+
+    public static void gameOver() {
+        gameState.setScore(1);
+        System.out.println("You have lost.");
+        System.out.printf("Final score %d\n", gameState.getScore());
+        System.exit(0);
+    }
+
     public static void generateTiles(int size, int d, int startX, int startY) {
         for (Tiles[] tile : tiles) {
             Arrays.fill(tile, null);
@@ -165,7 +178,7 @@ public class GameEngine {
                     gameState.setLevel(2);
                     generateTiles(10, gameState.getDifficulty() + 2, playerX, playerY);
                 } else {
-
+                    gameWin();
                 }
             }
         }
@@ -295,26 +308,25 @@ public class GameEngine {
 
     public static void checkPlayerConditioners() {
         if (player.isDead()) {
-
+            gameOver();
         } else if (gameState.getSteps() <= 0) {
-
+            gameOver();
         }
     }
 
     public static void playerMove(boolean x) {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
+        checkPlayerConditioners();
         checkMeleeAttack();
         checkRangeAttack();
         checkHealthPotion();
         checkTrap();
         checkGold();
-        checkPlayerConditioners();
         checkLadder();
         if (x) {
             System.out.printf("You have moved to (%d,%d)\n", playerX, playerY);
-            System.out.printf("Health: %d/%d | Score %d | Steps taken : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), player.getPlayerSteps());
-            gameState.setSteps(-1);
+            System.out.printf("Health: %d/%d | Score %d | Steps Remaining : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), gameState.getSteps());
         } else {
             System.out.printf("You were unable to move and are still at (%d,%d)\n", playerX, playerY);
         }
@@ -326,11 +338,13 @@ public class GameEngine {
         if (player.checkPlayerMoveY(1)) {
             if (tiles[playerY + 1][playerX] == null) {
                 player.setPlayerLocationY(1);
+                gameState.setSteps(1);
                 playerMove(true);
             } else if (tiles[playerY +1][playerX].getTileType() == 0) {
                 playerMove(false);
             } else {
                 player.setPlayerLocationY(1);
+                gameState.setSteps(1);
                 playerMove(true);
             }
         } else {
@@ -344,11 +358,13 @@ public class GameEngine {
         if (player.checkPlayerMoveY(-1)) {
             if (tiles[playerY - 1][playerX] == null) {
                 player.setPlayerLocationY(-1);
+                gameState.setSteps(1);
                 playerMove(true);
             } else if (tiles[playerY - 1][playerX].getTileType() == 0) {
                 playerMove(false);
             } else {
                 player.setPlayerLocationY(-1);
+                gameState.setSteps(1);
                 playerMove(true);
             }
         } else {
@@ -362,11 +378,13 @@ public class GameEngine {
         if (player.checkPlayerMoveX(1)) {
             if (tiles[playerY][playerX + 1] == null) {
                 player.setPlayerLocationX(1);
+                gameState.setSteps(1);
                 playerMove(true);
             } else if (tiles[playerY][playerX + 1].getTileType() == 0) {
                 playerMove(false);
             } else {
                 player.setPlayerLocationX(1);
+                gameState.setSteps(1);
                 playerMove(true);
             }
         } else {
@@ -380,11 +398,13 @@ public class GameEngine {
         if (player.checkPlayerMoveX(-1)) {
             if (tiles[playerY][playerX - 1] == null) {
                 player.setPlayerLocationX(-1);
+                gameState.setSteps(1);
                 playerMove(true);
             } else if (tiles[playerY][playerX - 1].getTileType() == 0) {
                 playerMove(false);
             } else {
                 player.setPlayerLocationX(-1);
+                gameState.setSteps(1);
                 playerMove(true);
             }
         } else {

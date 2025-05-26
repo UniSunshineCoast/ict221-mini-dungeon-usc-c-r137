@@ -1,7 +1,6 @@
 package dungeon.engine;
 
 public class Player implements HealthInterface {
-    private int playerSteps;
     private int playerLocationX;
     private int playerLocationY;
     private final int playerSize;
@@ -11,7 +10,6 @@ public class Player implements HealthInterface {
         playerLocationX = 0;
         playerLocationY = 0;
         playerSize = x - 1;
-        playerSteps = 0;
         playerHealth = getMaxHealth();
     }
 
@@ -24,12 +22,10 @@ public class Player implements HealthInterface {
     }
 
     public void setPlayerLocationY(int y) {
-        this.playerSteps++;
         this.playerLocationY = this.playerLocationY + y;
     }
 
     public void setPlayerLocationX(int x) {
-        this.playerSteps++;
         this.playerLocationX = this.playerLocationX + x;
     }
 
@@ -39,10 +35,6 @@ public class Player implements HealthInterface {
 
     public int getPlayerLocationX() {
         return this.playerLocationX;
-    }
-
-    public int getPlayerSteps() {
-        return this.playerSteps;
     }
 
     @Override
