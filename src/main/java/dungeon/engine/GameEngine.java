@@ -2,6 +2,7 @@ package dungeon.engine;
 
 import javafx.scene.text.Text;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
@@ -26,7 +27,16 @@ public class GameEngine {
     private static Wall wall;
     private static Ladder ladder;
     private static Entry entry;
-    private static final Highscores highscores = new Highscores();
+    private static final Highscores highscores;
+
+    static {
+        try {
+            highscores = new Highscores();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static Maps gameMap;
     private static final Random rand = new Random();
     private static Tiles[][] tiles;
@@ -62,15 +72,29 @@ public class GameEngine {
         highscores.checkHighscore(gameState.getScore());
         System.out.println("You have won.");
         System.out.printf("Final score %d\n", gameState.getScore());
+        printHighscore();
         highscores.saveHighscores();
         System.exit(0);
     }
 
-    public static void gameOver() {
+    public static void gameOver() throws IOException {
         gameState.setScore(1);
+        highscores.checkHighscore(gameState.getScore());
         System.out.println("You have lost.");
         System.out.printf("Final score %d\n", gameState.getScore());
+        printHighscore();
+        highscores.saveHighscores();
         System.exit(0);
+    }
+
+    public static void printHighscore() {
+        String[][] highscoreList = (String[][]) highscores.getHighscores();
+        for (String[] strings : highscoreList) {
+            for (String string : strings) {
+                System.out.print(string + " ");
+            }
+            System.out.print("\n");
+        }
     }
 
     public static void generateTiles(int size, int d, int startX, int startY) {
@@ -309,7 +333,7 @@ public class GameEngine {
         }
     }
 
-    public static void checkPlayerConditioners() {
+    public static void checkPlayerConditioners() throws IOException {
         if (player.isDead()) {
             gameOver();
         } else if (gameState.getSteps() <= 0) {

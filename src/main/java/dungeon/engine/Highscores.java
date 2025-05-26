@@ -3,19 +3,21 @@ package dungeon.engine;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Highscores {
     String[][] highscoresArray;
 
-    public Highscores() {
+    public Highscores() throws FileNotFoundException {
         highscoresArray = new String[5][3];
+        loadHighscores();
     }
 
     public void checkHighscore(int i) {
         LocalDate date = LocalDate.now();
         for (int j = 0; j < highscoresArray.length; j++) {
-            if (highscoresArray[j][1] == null) {
+            if (Objects.equals(highscoresArray[j][1], "null")) {
                 highscoresArray[j][0] = String.valueOf(j+1);
                 highscoresArray[j][1] = String.valueOf(i);
                 highscoresArray[j][2] = String.valueOf(date);
@@ -40,7 +42,6 @@ public class Highscores {
                 System.arraycopy(splitData, 0, strings, 0, splitData.length);
             }
         }
-        System.out.println(Arrays.deepToString(highscoresArray));
         fileReader.close();
     }
 

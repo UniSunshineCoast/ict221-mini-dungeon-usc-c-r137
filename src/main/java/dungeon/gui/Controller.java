@@ -5,6 +5,8 @@ import dungeon.engine.GameEngine;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 
+import java.io.FileNotFoundException;
+
 public class Controller {
     @FXML
     private GridPane gridPane;
