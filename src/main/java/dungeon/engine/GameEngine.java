@@ -26,6 +26,7 @@ public class GameEngine {
     private static Wall wall;
     private static Ladder ladder;
     private static Entry entry;
+    private static final Highscores highscores = new Highscores();
     private static Maps gameMap;
     private static final Random rand = new Random();
     private static Tiles[][] tiles;
@@ -57,9 +58,11 @@ public class GameEngine {
         player.setPlayerLocationY(startY);
     }
 
-    public static void gameWin() {
+    public static void gameWin() throws IOException {
+        highscores.checkHighscore(gameState.getScore());
         System.out.println("You have won.");
         System.out.printf("Final score %d\n", gameState.getScore());
+        highscores.saveHighscores();
         System.exit(0);
     }
 
@@ -167,7 +170,7 @@ public class GameEngine {
         }
     }
 
-    public static void checkLadder() {
+    public static void checkLadder() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         if (tiles[playerY][playerX] != null) {
@@ -314,14 +317,14 @@ public class GameEngine {
         }
     }
 
-    public static void playerMove(boolean x) {
+    public static void playerMove(boolean x) throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
-        checkPlayerConditioners();
         checkMeleeAttack();
         checkRangeAttack();
-        checkHealthPotion();
         checkTrap();
+        checkPlayerConditioners();
+        checkHealthPotion();
         checkGold();
         checkLadder();
         if (x) {
@@ -332,7 +335,7 @@ public class GameEngine {
         }
     }
 
-    public static void playerMoveUp() {
+    public static void playerMoveUp() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         if (player.checkPlayerMoveY(1)) {
@@ -352,7 +355,7 @@ public class GameEngine {
         }
     }
 
-    public static void playerMoveDown() {
+    public static void playerMoveDown() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         if (player.checkPlayerMoveY(-1)) {
@@ -372,7 +375,7 @@ public class GameEngine {
         }
     }
 
-    public static void playerMoveRight() {
+    public static void playerMoveRight() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         if (player.checkPlayerMoveX(1)) {
@@ -392,7 +395,7 @@ public class GameEngine {
         }
     }
 
-    public static void playerMoveLeft() {
+    public static void playerMoveLeft() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         if (player.checkPlayerMoveX(-1)) {
