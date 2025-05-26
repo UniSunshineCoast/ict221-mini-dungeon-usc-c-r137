@@ -91,7 +91,8 @@ public class GameEngine {
         String[][] highscoreList = (String[][]) highscores.getHighscores();
         for (String[] strings : highscoreList) {
             for (String string : strings) {
-                System.out.print(string + " ");
+                if (string != null)
+                    System.out.print(string + " ");
             }
             System.out.print("\n");
         }
@@ -471,6 +472,9 @@ public class GameEngine {
             gameState.setDifficulty(d);
         }
         GameEngine engine = new GameEngine(10, d, 0, 0);
+
+        gameState.setScore(17);
+        gameWin();
 
         System.out.println("To move enter 'left', 'right', 'up', 'down' and 'x' to exit");
         while(true) {

@@ -17,17 +17,19 @@ public class Highscores {
     public void checkHighscore(int i) {
         LocalDate date = LocalDate.now();
         for (int j = 0; j < highscoresArray.length; j++) {
-            if (Objects.equals(highscoresArray[j][1], "null")) {
-                highscoresArray[j][0] = String.valueOf(j+1);
-                highscoresArray[j][1] = String.valueOf(i);
-                highscoresArray[j][2] = String.valueOf(date);
+            if (highscoresArray[j][1] == null) {
+                highscoresArray[j] = new String[]{String.valueOf(j + 1), String.valueOf(i), String.valueOf(date)};
                 break;
             }else if (i > Integer.parseInt(highscoresArray[j][1])) {
-                highscoresArray[j][0] = String.valueOf(j+1);
-                highscoresArray[j][1] = String.valueOf(i);
-                highscoresArray[j][2] = String.valueOf(date);
+                for (int p = highscoresArray.length - 1; p > j; p--){
+                    highscoresArray[p] = highscoresArray[p-1];
+                }
+                highscoresArray[j] = new String[]{String.valueOf(j + 1), String.valueOf(i), String.valueOf(date)};
                 break;
             }
+        }
+        for (int j = 0; j < highscoresArray.length; j++) {
+            highscoresArray[j][0] = String.valueOf(j +1);
         }
     }
 
@@ -39,7 +41,9 @@ public class Highscores {
             for (String[] strings : highscoresArray) {
                 String data = fileReader.nextLine().replaceAll("\\s+", "");
                 String[] splitData = data.split(regex);
-                System.arraycopy(splitData, 0, strings, 0, splitData.length);
+                if (!Objects.equals(splitData[0], "null")) {
+                    System.arraycopy(splitData, 0, strings, 0, splitData.length);
+                }
             }
         }
         fileReader.close();
