@@ -117,7 +117,7 @@ public class GameEngine {
         }
     }
 
-    public static  void saveGame() {
+    public static void saveGame() {
         String tileFileName = "savedtiles.txt";
         String playerFileName = "savedplayer.txt";
         String gameStateFileName = "savedgamestate.txt";
@@ -544,6 +544,21 @@ public class GameEngine {
         return map;
     }
 
+    public int getPlayerX() {
+        return player.getPlayerLocationX();
+    }
+
+    public int getPlayerY() {
+        return player.getPlayerLocationY();
+    }
+
+    public Object[][] getTiles() {
+        return tiles;
+    }
+
+    public int getTileType(int x, int y) {
+        return tiles[x][y].getTileType();
+    }
     /**
      * Plays a text-based game
      */
