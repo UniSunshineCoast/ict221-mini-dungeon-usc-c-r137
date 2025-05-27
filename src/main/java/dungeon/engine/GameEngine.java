@@ -42,12 +42,15 @@ public class GameEngine {
      *
      * @param size the width and height.
      */
-    public GameEngine(int size, int d, int startX, int startY) {
+    public GameEngine(int size, int d, int startX, int startY) throws FileNotFoundException {
         map = new Cell[size][size];
         tiles = new Tiles[size][size];
         player = new Player(size);
         gameState = new GameState(100);
         gameMap = new Maps();
+
+        gameState.setDifficulty(d);
+        highscores.loadHighscores();
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -58,7 +61,7 @@ public class GameEngine {
             }
         }
 
-       generateTiles(size, d, startX, startY);
+       generateTiles(size, gameState.getDifficulty(), startX, startY);
 
         map[0][0].setStyle("-fx-background-color: #7baaa4");
         map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
@@ -146,11 +149,12 @@ public class GameEngine {
         System.exit(0);
     }
 
-    public static void loadGame(int size) {
+    public static void loadGame(int size) throws FileNotFoundException {
         String tileFileName = "savedtiles.txt";
         String playerFileName = "savedplayer.txt";
         String gameStateFileName = "savedgamestate.txt";
         map = new Cell[size][size];
+        highscores.loadHighscores();
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(tileFileName))) {
             int rows = ois.readInt();
@@ -547,17 +551,16 @@ public class GameEngine {
         int size = 10;
         String userInput;
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
-        int d = 3;
         System.out.println("Do you want to load your save? Y/N");
         userInput = r.readLine();
         if (userInput.equalsIgnoreCase("y")) {
             loadGame(size);
         } else {
+            int d = 3;
             System.out.println("Enter your difficulty 1 - 10");
             userInput = r.readLine();
             if (userInput.matches("[0-10]+")) {
                 d = Integer.parseInt(userInput);
-                gameState.setDifficulty(d);
             }
             GameEngine engine = new GameEngine(size, d, 0, 0);
         }

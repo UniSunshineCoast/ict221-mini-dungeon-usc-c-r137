@@ -14,7 +14,7 @@ public class Controller {
     GameEngine engine;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws FileNotFoundException {
         engine = new GameEngine(10, 3, 0, 0);
 
         updateGui();

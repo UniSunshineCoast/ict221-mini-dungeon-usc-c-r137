@@ -11,7 +11,6 @@ public class Highscores {
 
     public Highscores() throws FileNotFoundException {
         highscoresArray = new String[5][3];
-        loadHighscores();
     }
 
     public void checkHighscore(int i) {
