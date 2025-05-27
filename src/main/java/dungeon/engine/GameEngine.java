@@ -1,7 +1,6 @@
 package dungeon.engine;
 
 import javafx.scene.text.Text;
-
 import java.io.*;
 import java.util.Random;
 import java.util.Arrays;
@@ -558,6 +557,22 @@ public class GameEngine {
 
     public int getTileType(int x, int y) {
         return tiles[x][y].getTileType();
+    }
+
+    public int getPlayerHealth() {
+        return player.getHealth();
+    }
+
+    public int getPlayerMaxHealth() {
+        return player.getMaxHealth();
+    }
+
+    public int getScore() {
+        return gameState.getScore();
+    }
+
+    public int getSteps() {
+        return gameState.getSteps();
     }
     /**
      * Plays a text-based game

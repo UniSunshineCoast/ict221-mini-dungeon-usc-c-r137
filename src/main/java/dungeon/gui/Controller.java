@@ -28,6 +28,12 @@ public class Controller {
     private Button buttonHelp;
     @FXML
     private Button buttonExit;
+    @FXML
+    private Label lblScore;
+    @FXML
+    private Label lblHealth;
+    @FXML
+    private Label lblSteps;
 
     GameEngine engine;
 
@@ -83,6 +89,10 @@ public class Controller {
         buttonExit.setOnAction(event -> {
             System.exit(0);
         });
+
+        lblScore.setText("Score: ");
+        lblHealth.setText("Health: ");
+        lblSteps.setText("Remaining Steps: ");
 
         gridPane.setGridLinesVisible(true);
         updateGui();
@@ -170,6 +180,10 @@ public class Controller {
                 }
             }
         }
+
+        lblScore.setText(String.format("Score: %d", engine.getScore()));
+        lblHealth.setText(String.format("Health: %d/%d", engine.getPlayerHealth(), engine.getPlayerMaxHealth()));
+        lblSteps.setText(String.format("Remaining Steps: %d", engine.getSteps()));
     }
 }
 
