@@ -91,7 +91,6 @@ public class GameEngine {
         printHighscore();
         highscores.saveHighscores();
         deleteSave();
-        System.exit(0);
     }
 
     public static void gameOver() throws IOException {
@@ -439,7 +438,6 @@ public class GameEngine {
         checkLadder();
         if (x) {
             System.out.printf("You have moved to (%d,%d)\n", playerX, playerY);
-            System.out.printf("Health: %d/%d | Score %d | Steps Remaining : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), gameState.getSteps());
         } else {
             System.out.printf("You were unable to move and are still at (%d,%d)\n", playerX, playerY);
         }
@@ -597,8 +595,8 @@ public class GameEngine {
 
         System.out.println("To move enter 'left' to move left, 'right' to move right, 'up' to move up,\n" +
                             "'down' to move down, 'x' to exit, 'save' to save the game");
-        System.out.printf("Health: %d/%d | Score %d | Steps Remaining : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), gameState.getSteps());
         while(true) {
+            System.out.printf("Health: %d/%d | Score %d | Steps Remaining : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), gameState.getSteps());
             System.out.println("\n=== DUNGEON MAP ===");
             for(int i = map.length; i > 0; i--) {
                 for(int j = 0; j < map[i-1].length; j++){

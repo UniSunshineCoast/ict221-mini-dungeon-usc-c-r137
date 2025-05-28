@@ -2,14 +2,18 @@ package dungeon.gui;
 
 import dungeon.engine.Cell;
 import dungeon.engine.GameEngine;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class Controller {
     @FXML
@@ -34,12 +38,71 @@ public class Controller {
     private Label lblHealth;
     @FXML
     private Label lblSteps;
+    @FXML
+    private TextArea consoleTextArea;
+    @FXML
+    private Button buttonRun;
+    @FXML
+    private Button buttonLoad;
 
     GameEngine engine;
 
     @FXML
     public void initialize() throws FileNotFoundException {
-        engine = new GameEngine(10, 3, 0, 0);
+        buttonUp.setDisable(true);
+        buttonDown.setDisable(true);
+        buttonRight.setDisable(true);
+        buttonLeft.setDisable(true);
+        buttonSave.setDisable(true);
+        buttonHelp.setDisable(true);
+
+        consoleTextArea.textProperty().addListener(new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+                consoleTextArea.setScrollTop(Double.MAX_VALUE);
+            }
+        });
+
+        buttonHelp.setOnAction(event -> {
+            System.out.println("Use the directional buttons to move the player around the dungeon. Your goal is to " +
+                    "get the highest score without dying within th dungeon. You can save the game at any time by" +
+                    "pressing the save button. Good Luck!");
+            updateGui();
+        });
+
+        buttonLoad.setOnAction(event -> {
+            try {
+                engine = new GameEngine(10, 3, 0, 0);
+                GameEngine.loadGame(10);
+                buttonUp.setDisable(false);
+                buttonDown.setDisable(false);
+                buttonRight.setDisable(false);
+                buttonLeft.setDisable(false);
+                buttonSave.setDisable(false);
+                buttonHelp.setDisable(false);
+                buttonLoad.setDisable(true);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            updateGui();
+        });
+
+        buttonRun.setOnAction(event -> {
+            try {
+                engine = new GameEngine(10, 3, 0, 0);
+                buttonUp.setDisable(false);
+                buttonDown.setDisable(false);
+                buttonRight.setDisable(false);
+                buttonLeft.setDisable(false);
+                buttonSave.setDisable(false);
+                buttonHelp.setDisable(false);
+                buttonLoad.setDisable(true);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            updateGui();
+        });
+
         buttonUp.setOnAction(event -> {
             try {
                 GameEngine.playerMoveUp();
@@ -76,11 +139,6 @@ public class Controller {
             updateGui();
         });
 
-        buttonHelp.setOnAction(event -> {
-            //todo
-            updateGui();
-        });
-
         buttonSave.setOnAction(event -> {
             GameEngine.saveGame();
             updateGui();
@@ -95,7 +153,6 @@ public class Controller {
         lblSteps.setText("Remaining Steps: ");
 
         gridPane.setGridLinesVisible(true);
-        updateGui();
     }
 
     private void updateGui() {
@@ -184,6 +241,8 @@ public class Controller {
         lblScore.setText(String.format("Score: %d", engine.getScore()));
         lblHealth.setText(String.format("Health: %d/%d", engine.getPlayerHealth(), engine.getPlayerMaxHealth()));
         lblSteps.setText(String.format("Remaining Steps: %d", engine.getSteps()));
+
+        System.setOut(new PrintStream(new CustomerOutputStream(consoleTextArea)));
     }
 }
 

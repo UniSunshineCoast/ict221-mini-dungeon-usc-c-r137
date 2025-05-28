@@ -38,14 +38,16 @@
                         <Button fx:id="buttonDown" layoutX="50.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="Down" />
                         <Button fx:id="buttonUp" layoutX="50.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="Up" />
                         <Button fx:id="buttonRight" layoutX="100.0" layoutY="30.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="Right" />
-                        <Button fx:id="buttonSave" layoutX="160.0" layoutY="50.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Save" />
-                        <Button fx:id="buttonExit" layoutX="160.0" layoutY="1.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Exit" />
-                        <Button fx:id="buttonHelp" layoutX="160.0" layoutY="25.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Help" />
+                        <Button fx:id="buttonSave" layoutX="160.0" layoutY="72.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Save" />
+                        <Button fx:id="buttonExit" layoutX="160.0" layoutY="97.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Exit" />
+                        <Button fx:id="buttonHelp" layoutX="160.0" layoutY="47.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Help" />
+                        <Button fx:id="buttonRun" layoutX="160.0" layoutY="-3.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Run" />
+                        <Button fx:id="buttonLoad" layoutX="160.0" layoutY="22.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Load" />
                      </children>
                   </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <TextArea editable="false" prefHeight="116.0" prefWidth="537.0" text="Console" />
+                        <TextArea fx:id="consoleTextArea" editable="false" prefHeight="116.0" prefWidth="537.0" wrapText="true" />
                      </children>
                   </AnchorPane>
               </items>
