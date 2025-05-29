@@ -574,6 +574,11 @@ public class GameEngine {
     public int getSteps() {
         return gameState.getSteps();
     }
+
+    public boolean getGameRunning() {
+        return gameRunning;
+    }
+
     /**
      * Plays a text-based game
      */

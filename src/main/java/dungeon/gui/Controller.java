@@ -243,6 +243,16 @@ public class Controller {
         lblSteps.setText(String.format("Remaining Steps: %d", engine.getSteps()));
 
         System.setOut(new PrintStream(new CustomerOutputStream(consoleTextArea)));
+
+        if (engine.getGameRunning()) {
+            buttonUp.setDisable(true);
+            buttonDown.setDisable(true);
+            buttonRight.setDisable(true);
+            buttonLeft.setDisable(true);
+            buttonSave.setDisable(true);
+            buttonHelp.setDisable(true);
+        }
+
     }
 }
 
