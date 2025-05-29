@@ -24,6 +24,7 @@ public class GameEngine {
     private static Ladder ladder;
     private static Entry entry;
     private static final Highscores highscores;
+    private static boolean gameRunning = true;
 
     static {
         try {
@@ -91,6 +92,7 @@ public class GameEngine {
         printHighscore();
         highscores.saveHighscores();
         deleteSave();
+        gameRunning = false;
     }
 
     public static void gameOver() throws IOException {
@@ -101,7 +103,7 @@ public class GameEngine {
         printHighscore();
         highscores.saveHighscores();
         deleteSave();
-        System.exit(0);
+        gameRunning = false;
     }
 
     public static void printHighscore() {
@@ -595,7 +597,7 @@ public class GameEngine {
 
         System.out.println("To move enter 'left' to move left, 'right' to move right, 'up' to move up,\n" +
                             "'down' to move down, 'x' to exit, 'save' to save the game");
-        while(true) {
+        while(gameRunning) {
             System.out.printf("Health: %d/%d | Score %d | Steps Remaining : %d\n", player.getHealth(), player.getMaxHealth(), gameState.getScore(), gameState.getSteps());
             System.out.println("\n=== DUNGEON MAP ===");
             for(int i = map.length; i > 0; i--) {
