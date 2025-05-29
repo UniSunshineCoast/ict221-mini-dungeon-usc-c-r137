@@ -4,9 +4,11 @@ import dungeon.engine.Cell;
 import dungeon.engine.GameEngine;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -44,11 +46,15 @@ public class Controller {
     private Button buttonRun;
     @FXML
     private Button buttonLoad;
+    @FXML
+    private ComboBox<Integer> gameDifficulty;
 
     GameEngine engine;
 
     @FXML
     public void initialize() throws FileNotFoundException {
+        gameDifficulty.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        gameDifficulty.getSelectionModel().select(2);
         buttonUp.setDisable(true);
         buttonDown.setDisable(true);
         buttonRight.setDisable(true);
@@ -89,7 +95,8 @@ public class Controller {
 
         buttonRun.setOnAction(event -> {
             try {
-                engine = new GameEngine(10, 3, 0, 0);
+                int d = gameDifficulty.getValue();
+                engine = new GameEngine(10, d, 0, 0);
                 buttonUp.setDisable(false);
                 buttonDown.setDisable(false);
                 buttonRight.setDisable(false);
