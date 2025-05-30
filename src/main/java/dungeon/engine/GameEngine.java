@@ -67,6 +67,10 @@ public class GameEngine {
         map[size-1][size-1].setStyle("-fx-background-color: #7baaa4");
     }
 
+    /**
+     * Delete save from game if player has won the game
+     *
+     */
     private static void deleteSave() {
         File tileSave = new File("savedtiles.txt");
         File playerSave = new  File("savedplayer.txt");
@@ -85,7 +89,11 @@ public class GameEngine {
         }
     }
 
-    public static void gameWin() throws IOException {
+    /**
+     * Prints game win message and saves highscore
+     *
+     */
+    private static void gameWin() throws IOException {
         highscores.checkHighscore(gameState.getScore());
         System.out.println("You have won.");
         System.out.printf("Final score %d\n", gameState.getScore());
@@ -95,7 +103,11 @@ public class GameEngine {
         gameRunning = false;
     }
 
-    public static void gameOver() throws IOException {
+    /**
+     * Prints game over message and saves highscore
+     *
+     */
+    private static void gameOver() throws IOException {
         gameState.setScore(1);
         highscores.checkHighscore(gameState.getScore());
         System.out.println("You have lost.");
@@ -106,7 +118,11 @@ public class GameEngine {
         gameRunning = false;
     }
 
-    public static void printHighscore() {
+    /**
+     * Calls to high score object and prints high scores
+     *
+     */
+    private static void printHighscore() {
         String[][] highscoreList = (String[][]) highscores.getHighscores();
         for (String[] strings : highscoreList) {
             for (String string : strings) {
@@ -117,6 +133,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Saves games object states into files
+     *
+     */
     public static void saveGame() {
         String tileFileName = "savedtiles.txt";
         String playerFileName = "savedplayer.txt";
@@ -149,6 +169,10 @@ public class GameEngine {
         System.exit(0);
     }
 
+    /**
+     * Checks if player has a save and loads into state into objects
+     *
+     */
     public static void loadGame(int size) throws FileNotFoundException {
         File tileSave = new File("savedtiles.txt");
         File playerSave = new File("savedplayer.txt");
@@ -190,7 +214,11 @@ public class GameEngine {
         }
     }
 
-    public static void generateTiles(int size, int d, int startX, int startY) {
+    /**
+     * Used to generate random tiles that include enemies and pickups
+     *
+     */
+    private static void generateTiles(int size, int d, int startX, int startY) {
         for (Tiles[] tile : tiles) {
             Arrays.fill(tile, null);
         }
@@ -287,7 +315,11 @@ public class GameEngine {
         }
     }
 
-    public static void checkLadder() throws IOException {
+    /**
+     * Checks if player has stood on ladder
+     *
+     */
+    private static void checkLadder() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         if (tiles[playerY][playerX] != null) {
@@ -304,7 +336,11 @@ public class GameEngine {
         }
     }
 
-    public static void checkGold() {
+    /**
+     * Checks if player has stood on gold
+     *
+     */
+    private static void checkGold() {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int score;
@@ -318,7 +354,11 @@ public class GameEngine {
         }
     }
 
-    public static void checkHealthPotion() {
+    /**
+     * Checks if player has stood on health potion
+     *
+     */
+    private static void checkHealthPotion() {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int heal;
@@ -332,7 +372,11 @@ public class GameEngine {
         }
     }
 
-    public  static void checkMeleeAttack() {
+    /**
+     * Checks if player was attacked by melee mutant
+     *
+     */
+    private  static void checkMeleeAttack() {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int damage;
@@ -349,7 +393,11 @@ public class GameEngine {
         }
     }
 
-    public static void checkTrap() {
+    /**
+     * Check is player has stood on trap
+     *
+     */
+    private static void checkTrap() {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int damage;
@@ -363,7 +411,11 @@ public class GameEngine {
         }
     }
 
-    public static void checkRangeAttack() {
+    /**
+     * Checks if player was attacked by ranged mutant
+     *
+     */
+    private static void checkRangeAttack() {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         int damage;
@@ -426,7 +478,11 @@ public class GameEngine {
         }
     }
 
-    public static void checkPlayerConditioners() throws IOException {
+    /**
+     * Checks if player has died
+     *
+     */
+    private static void checkPlayerConditioners() throws IOException {
         if (player.isDead()) {
             gameOver();
         } else if (gameState.getSteps() <= 0) {
@@ -434,7 +490,11 @@ public class GameEngine {
         }
     }
 
-    public static void playerMove(boolean x) throws IOException {
+    /**
+     * Used to call other methods to check after move and print information
+     *
+     */
+    private static void playerMove(boolean x) throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
         checkMeleeAttack();
@@ -451,6 +511,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Used to check player movement up and call move to player object.
+     *
+     */
     public static void playerMoveUp() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
@@ -471,6 +535,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Used to check player movement down and call move to player object.
+     *
+     */
     public static void playerMoveDown() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
@@ -491,6 +559,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Used to check player movement right and call move to player object.
+     *
+     */
     public static void playerMoveRight() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
@@ -511,6 +583,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Used to check player movement left and call move to player object.
+     *
+     */
     public static void playerMoveLeft() throws IOException {
         int playerY = player.getPlayerLocationY();
         int playerX = player.getPlayerLocationX();
@@ -549,38 +625,83 @@ public class GameEngine {
         return map;
     }
 
+    /**
+     * The x position of player.
+     *
+     * @return the player x position, int.
+     */
     public int getPlayerX() {
         return player.getPlayerLocationX();
     }
 
+    /**
+     * The y position of player.
+     *
+     * @return the player y position, int.
+     */
     public int getPlayerY() {
         return player.getPlayerLocationY();
     }
 
+    /**
+     * The tiles of the current game.
+     *
+     * @return the tiles, which is 2d array.
+     */
     public Object[][] getTiles() {
         return tiles;
     }
 
+    /**
+     * The type of current tile position.
+     *
+     * @return the tile type, int.
+     */
     public int getTileType(int x, int y) {
         return tiles[x][y].getTileType();
     }
 
+    /**
+     * The players health.
+     *
+     * @return players health, int.
+     */
     public int getPlayerHealth() {
         return player.getHealth();
     }
 
+    /**
+     * The players max health
+     *
+     * @return players max health, int.
+     */
     public int getPlayerMaxHealth() {
         return player.getMaxHealth();
     }
 
+    /**
+     * The score of the current game.
+     *
+     * @return the score, int.
+     */
     public int getScore() {
         return gameState.getScore();
     }
 
+    /**
+     * The remaining steps of current game.
+     *
+     * @return the remaining steps, int.
+     */
     public int getSteps() {
         return gameState.getSteps();
     }
 
+    /**
+     * The current game running state.
+     *
+     * @return the game running state, boolean.
+     */
     public boolean getGameRunning() {
         return gameRunning;
     }
