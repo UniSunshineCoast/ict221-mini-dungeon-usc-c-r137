@@ -9,10 +9,18 @@ import java.util.Scanner;
 public class Highscores {
     String[][] highscoresArray;
 
+    /**
+     * Initializes highscore array.
+     *
+     */
     public Highscores() throws FileNotFoundException {
         highscoresArray = new String[5][3];
     }
 
+    /**
+     * Checks if the position of the provided highscore and moves array around.
+     *
+     */
     public void checkHighscore(int i) {
         LocalDate date = LocalDate.now();
         for (int j = 0; j < highscoresArray.length; j++) {
@@ -32,6 +40,10 @@ public class Highscores {
         }
     }
 
+    /**
+     * Loads highscore from file.
+     *
+     */
     public void loadHighscores() throws FileNotFoundException {
         File file = new File("highscores.txt");
         Scanner fileReader = new Scanner(file);
@@ -48,6 +60,10 @@ public class Highscores {
         fileReader.close();
     }
 
+    /**
+     * Saves highscore to the file.
+     *
+     */
     public void saveHighscores() throws IOException {
         Writer fileWriter = new FileWriter("highscores.txt");
         for (String[] strings : highscoresArray) {
@@ -59,6 +75,11 @@ public class Highscores {
         fileWriter.close();
     }
 
+    /**
+     * The highscores within the array.
+     *
+     * @return the highscores, String array.
+     */
     public Object[] getHighscores() {
         return highscoresArray;
     }
