@@ -70,7 +70,7 @@ public class GameEngine {
     private static void deleteSave() {
         File tileSave = new File("savedtiles.txt");
         File playerSave = new  File("savedplayer.txt");
-        File gameStateFileName = new File("savedgamestate.txt");
+        File gameStateSave = new File("savedgamestate.txt");
 
         if (tileSave.exists()) {
             tileSave.delete();
@@ -80,8 +80,8 @@ public class GameEngine {
             playerSave.delete();
         }
 
-        if (gameStateFileName.exists()) {
-            gameStateFileName.delete();
+        if (gameStateSave.exists()) {
+            gameStateSave.delete();
         }
     }
 
@@ -150,37 +150,43 @@ public class GameEngine {
     }
 
     public static void loadGame(int size) throws FileNotFoundException {
-        String tileFileName = "savedtiles.txt";
-        String playerFileName = "savedplayer.txt";
-        String gameStateFileName = "savedgamestate.txt";
+        File tileSave = new File("savedtiles.txt");
+        File playerSave = new File("savedplayer.txt");
+        File gameStateSave = new File("savedgamestate.txt");
         map = new Cell[size][size];
         highscores.loadHighscores();
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(tileFileName))) {
-            int rows = ois.readInt();
-            int cols = ois.readInt();
-            tiles = new Tiles[rows][cols];
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    tiles[i][j] = (Tiles) ois.readObject();
+        if (tileSave.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(tileSave))) {
+                int rows = ois.readInt();
+                int cols = ois.readInt();
+                tiles = new Tiles[rows][cols];
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        tiles[i][j] = (Tiles) ois.readObject();
+                    }
                 }
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(playerFileName))) {
-            player = new Player(size);
-            player = (Player) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        if (playerSave.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(playerSave))) {
+                player = new Player(size);
+                player = (Player) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(gameStateFileName))) {
-            gameState = new GameState(100);
-            gameState = (GameState) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        if (gameStateSave.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(gameStateSave))) {
+                gameState = new GameState(100);
+                gameState = (GameState) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
